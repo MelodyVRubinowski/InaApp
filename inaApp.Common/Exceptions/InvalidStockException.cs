@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace inaApp.Common.Exceptions
 {
-    public class InvalidStockException: Exception
+    public class invalidStockException : Exception
     {
-        public InvalidStockException()
+        public invalidStockException()
         {
-            
         }
 
-        public InvalidStockException(string?message):base(message)
+        public invalidStockException(string? message) : base(message)
         {
-            
         }
     }
 }

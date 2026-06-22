@@ -10,12 +10,10 @@ namespace inaApp.Common.Exceptions
     {
         public DuplicateNameException()
         {
-            
         }
 
-        public DuplicateNameException(string? message):base(message)
+        public DuplicateNameException(string? message) : base(message)
         {
-            
         }
     }
 }

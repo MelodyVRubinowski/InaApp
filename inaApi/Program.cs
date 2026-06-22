@@ -1,22 +1,18 @@
-using inaApp.Api.Extensions;
-using inaApp.Common.Interfaces;
-using inaApp.Repository;
+using inaApp.Common.interfaces;
 using inaApp.Services;
-using System.Text.Json.Serialization;
+using inaApp.Repository;
+using inaApp.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        //Devolver el enum como texto
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    });
+//inyecciones de dependencias 
+//registro contenedor de inyecciones de dependencias 
+builder.Services.AddAplicationServices(builder.Configuration);
 
-//Inyección de dependencias en archivos
-builder.Services.AddAplicaServices(builder.Configuration);
+
+builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using inaApp.Common.Response;
+//using inaApp.Entities;
 
-namespace inaApp.Common.Interfaces
+namespace inaApp.Common.interfaces
 {
-    public interface IGenericService<E>
+    public interface IGenericService<TResponse,TCreate,TUpdate>
     {
-        //Firmas de los metodos
-        Task<List<E>> obtenerTodosAsync();//Task xq son metodos asincronicos
 
-        Task<E> ObtenerPorIdAsync(int id);
+        Task<Response<List<TResponse>>> ObtenerTodosAsync();
+        Task<Response<TResponse>> ObtenerPorIdAsync(int id);
+        Task<Response<TResponse>> CrearAsync(TCreate entity);
+        Task<Response<TResponse>> ActualizarAsync(TUpdate entity);
+        Task<Response<bool>> EliminarAsync(int id);
 
-        Task<E> CrearAsync(E entity);
-
-        Task<E> ActualizarAsync(int id,E entity);
-
-        Task<bool> EliminarAsync(int id);
     }
 }

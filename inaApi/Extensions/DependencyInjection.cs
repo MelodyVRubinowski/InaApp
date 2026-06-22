@@ -1,30 +1,39 @@
-﻿using inaApp.Common.Interfaces;
+﻿using inaApp.Common.interfaces;
 using inaApp.Data;
-using inaApp.Entites;
+using inaApp.DTOs.Producto;
+using inaApp.DTOs.Cliente;
+using inaApp.DTOs.Categoria;
+using inaApp.Entities;
 using inaApp.Repository;
 using inaApp.Services;
 using Microsoft.EntityFrameworkCore;
+using inaApp.Services.Mapping;
 
 namespace inaApp.Api.Extensions
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddAplicaServices(this IServiceCollection services,IConfiguration configuration)
+        public static IServiceCollection AddAplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
-            //Inyecciones de baseDatos-dbContex
+            //base de datos- db context
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                options.UseSqlServer(
+                    configuration.GetConnectionString("DefaultConnection"));
             });
 
-            //Inyecciones de dependencia de servicios
-            services.AddScoped<IGenericService<Producto>, ProductoService>();
-            services.AddScoped<IGenericService<Cliente>, ClienteService>();
+            //Profile auto mapper 
+            //services.AddAutoMapper(typeof(MappingProfile));
+            services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 
-            //Inyección de dependencia de repostorios
-            services.AddScoped<IGenericRepository<Producto>, ProductoRespository>();
+            //inyecciones de dependencia de servicios
+            services.AddScoped<IGenericService<ProductoResponseDTO, ProductoCreateDTO, ProductoUpdateDTO>, ProductoService>();
+            services.AddScoped<IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO>, ClienteService>();
+            services.AddScoped<IGenericService<CategoriaResponseDTO, CategoriaCreateDTO, CategoriaUpdateDTO>, CategoriaService>();
+            //inyecciones de  dependencia de repositorios
+            services.AddScoped<IGenericRepository<Producto>, ProductoRepository>();
             services.AddScoped<IGenericRepository<Cliente>, ClienteRepository>();
-            services.AddScoped<IGenericRepository<Empleado>, EmpleadoRespository>();
+            services.AddScoped<IGenericRepository<Categoria>, CategoriaRepository>();
 
             return services;
         }

@@ -16,13 +16,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Data\inaApp.Data.csproj" />
     <ProjectReference Include="..\inaApp.Common\inaApp.Common.csproj" />
-    <ProjectReference Include="..\inaApp.Entites\inaApp.Entites.csproj" />
+    <ProjectReference Include="..\inaApp.DTOs\inaApp.DTOs.csproj" />
+    <ProjectReference Include="..\inaApp.Entities\inaApp.Entities.csproj" />
     <ProjectReference Include="..\inaApp.Services\inaApp.Services.csproj" />
   </ItemGroup>
 

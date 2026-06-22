@@ -1,126 +1,202 @@
-﻿    using inaApp.Common.Exceptions;
-using inaApp.Common.Interfaces;
-using inaApp.Entites;
+﻿using inaApp.Common.Exceptions;
+using inaApp.Common.interfaces;
+using inaApp.DTOs.Producto;
+using inaApp.Entities;
+using inaApp.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata.Ecma335;
 
 namespace inaApp.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class ProductoController : ControllerBase
+    [Route("api/producto")]
+    public class ProductoController : Controller
     {
-        private readonly IGenericService<Producto> _productoService;
 
-        public ProductoController(IGenericService<Producto> productoService)
+        //inyeccion de dependencia
+        private readonly IGenericService<ProductoResponseDTO,ProductoCreateDTO,ProductoUpdateDTO> _productoService;
+        
+
+        public ProductoController(IGenericService<ProductoResponseDTO, ProductoCreateDTO, ProductoUpdateDTO> productoServ)
         {
-            _productoService = productoService;
+            _productoService = productoServ;
+            
         }
+
+        // GET: ProductoController
 
         [HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> IndexAsync()
         {
-            var productos = await _productoService.obtenerTodosAsync();
-            return Ok(productos);
-        }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> Details(int id)
-        {
             try
             {
-                var result = await _productoService.ObtenerPorIdAsync(id);
+                var response = await _productoService.ObtenerTodosAsync();
 
-                return Ok(result);
+                return Ok(response);
             }
-            catch (NotFoundException ex)
-            {
+            catch (NotFoundException ex) 
+            { 
                 return NotFound(ex.Message);
             }
             catch (Exception)
             {
-                return NotFound();
+
+                return StatusCode(500, "Error de servidor,contacte con el servidor");
             }
-            
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult> ByIdAsync(int id)
+        {
+
+            try
+            {
+                var producto = await _productoService.ObtenerPorIdAsync(id);
+
+                //if (result == null)
+                //{
+                //    return NotFound("Producto no encontrado");
+                //}
+
+                return Ok(producto);
+            }
+            catch (NotFoundException ex)//aqui usammos la exepcion personalizada
+            {
+                return NotFound(ex.Message);
+            }
+            catch { 
+                return StatusCode(500, "Error de servidor,contacte con el servidor");
+            }
+        }
+
+        // GET: ProductoController/Details/5
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
+
+        //// GET: ProductoController/Create
+        //public ActionResult Create()
+        //{
+
+
+
+        //    return View();
+        //}
+
+        // POST: ProductoController/Create
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] Producto producto)
+        public async Task<ActionResult> Create([FromBody] ProductoCreateDTO productoDTO)
         {
             try
             {
-                var result = await _productoService.CrearAsync(producto);
-                return Created("Producto Creado", result);
+
+              //  productoDTO.Estado = true;
+
+                //Validar los datos de entrada
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var response = await _productoService.CrearAsync(productoDTO);
+
+                return Created("producto creado", response);
             }
-            catch (InvalidPriceException ex) {
+            catch (InvalidPriceException ex)
+            {
                 return BadRequest(ex.Message);
             }
-            catch (InvalidStockException ex)
+            catch (invalidStockException ex)
             {
                 return BadRequest(ex.Message);
             }
             catch (DuplicateNameException ex)
             {
-                return Conflict(ex.Message);
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {
-                return BadRequest("Erro al crar el producto");
+                return StatusCode(500,
+                    "Error de servidor, contacte con el administrador");
             }
         }
 
+        //// GET: ProductoController/Edit/5
+        //public ActionResult Edit(int id)
+        //{
+        //    return View();
+        //}
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Edit(int id, [FromBody] Producto producto)
-        {
-            try
-            {
-                if (id <= 0)
-                {
-                    return BadRequest("Id incorrecto");
-                }
+        //// POST: ProductoController/Edit/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(int id, IFormCollection collection)
+        //{
+        //    try
+        //    {
+        //        return RedirectToAction(nameof(IndexAsync));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
-                var result = await _productoService.ActualizarAsync(id, producto);
-
-                if (result is null)
-                {
-                    return NotFound("Producto no encontrado");
-                }
-
-                return Ok(result);
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound("Producto no encontrado");
-            }
-            catch (Exception)
-            {
-                return StatusCode(500, "Error interno del servidor");
-            }
-        }
-        
+        // GET: ProductoController/Delete/5
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
             try
             {
                 if (id <= 0)
-                {
-                    return BadRequest("Error al eliminar, id Icorrecto");
-                }
+                    return BadRequest("Error al eliminar, id invalido");
 
-                var result = await _productoService.EliminarAsync(id);
+                var response = await _productoService.EliminarAsync(id);
 
-                return result ? Ok("Producto Eliminado") : BadRequest("Erro al eliminar el producot");
+                return response.Data ? Ok(response) : BadRequest(response);
             }
             catch (Exception ex)
             {
 
-                return StatusCode(500, " Error 500");
+                return StatusCode (500,"Error de servidor,contacte con el servidor");
             }
 
         }
+
+        [HttpPut]
+        public async Task<ActionResult> EditAsync([FromBody] ProductoUpdateDTO producto)
+        {
+            try
+            {
+
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+                // producto.Estado = true;
+                var response = await _productoService.ActualizarAsync(producto);
+
+                return Ok(response);
+            }
+            catch (InvalidPriceException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (invalidStockException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (DuplicateNameException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500,
+                    "Error de servidor, contacte con el administrador");
+            }
+        }
+
+
     }
 }

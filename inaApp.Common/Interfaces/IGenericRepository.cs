@@ -4,21 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace inaApp.Common.Interfaces
+namespace inaApp.Common.interfaces
 {
     public interface IGenericRepository<E>
     {
-        //Firmas de los metodos
         Task<List<E>> obtenerTodosAsync();
 
-        Task<E> ObtenerPorIdAsync(int id);
+        Task<E> obtenerPorIdAsync(int id);
 
         Task<E> CrearAsync(E entity);
 
-        Task<E> ActualizarAsync(int id,E entity);
+        Task<E> ActualizarAsync(E entity);
 
         Task<bool> EliminarAsync(int id);
-
-        Task<bool> validarNombreRepetido(string nombre);
     }
 }

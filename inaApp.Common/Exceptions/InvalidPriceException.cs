@@ -8,7 +8,6 @@ namespace inaApp.Common.Exceptions
 {
     public class InvalidPriceException : Exception
     {
-
         public InvalidPriceException()
         {
         }
@@ -16,5 +15,6 @@ namespace inaApp.Common.Exceptions
         public InvalidPriceException(string? message) : base(message)
         {
         }
+
     }
 }

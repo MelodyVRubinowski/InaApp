@@ -9,10 +9,14 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.16" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.16">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\inaApp.Entites\inaApp.Entites.csproj" />
+    <ProjectReference Include="..\inaApp.Entities\inaApp.Entities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -22,13 +22,34 @@ namespace inaApp.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Cliente", b =>
+            modelBuilder.Entity("inaApp.Entities.Categoria", b =>
                 {
-                    b.Property<int>("IdCliente")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCliente"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("tbCategoria");
+                });
+
+            modelBuilder.Entity("inaApp.Entities.Cliente", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("Activo")
                         .HasColumnType("bit");
@@ -39,9 +60,6 @@ namespace inaApp.Data.Migrations
 
                     b.Property<DateTime>("FechaCreacion")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("IdTipoIdentificacion")
-                        .HasColumnType("int");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -69,11 +87,7 @@ namespace inaApp.Data.Migrations
                     b.Property<int>("TipoIdentificacion")
                         .HasColumnType("int");
 
-                    b.HasKey("IdCliente");
-
-                    b.HasIndex("CorreoElectronico")
-                        .IsUnique()
-                        .HasFilter("[CorreoElectronico] IS NOT NULL");
+                    b.HasKey("Id");
 
                     b.HasIndex("TipoIdentificacion", "NumeroIdentificacion")
                         .IsUnique();
@@ -81,7 +95,7 @@ namespace inaApp.Data.Migrations
                     b.ToTable("tbCliente");
                 });
 
-            modelBuilder.Entity("inaApp.Entites.Producto", b =>
+            modelBuilder.Entity("inaApp.Entities.Producto", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -89,16 +103,20 @@ namespace inaApp.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("Estado")
                         .HasColumnType("bit");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("Precio")
                         .HasColumnType("decimal(18,2)");
@@ -108,7 +126,25 @@ namespace inaApp.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoriaId");
+
                     b.ToTable("tbProducto");
+                });
+
+            modelBuilder.Entity("inaApp.Entities.Producto", b =>
+                {
+                    b.HasOne("inaApp.Entities.Categoria", "Categoria")
+                        .WithMany("Productos")
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categoria");
+                });
+
+            modelBuilder.Entity("inaApp.Entities.Categoria", b =>
+                {
+                    b.Navigation("Productos");
                 });
 #pragma warning restore 612, 618
         }

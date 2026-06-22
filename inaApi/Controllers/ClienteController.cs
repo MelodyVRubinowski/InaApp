@@ -1,157 +1,103 @@
 ﻿using inaApp.Common.Exceptions;
-using inaApp.Common.Interfaces;
-using inaApp.Entites;
-using Microsoft.AspNetCore.Http;
+using inaApp.Common.interfaces;
+using inaApp.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
+using inaApp.DTOs.Cliente;
+using inaApp.Common.Response;
 
 namespace inaApp.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/cliente")]
     public class ClienteController : Controller
     {
-        //Inyección de dependencias
-        private readonly IGenericService<Cliente> _clienteService;
+        private readonly IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO> _clienteService;
 
-        public ClienteController(IGenericService<Cliente> clienteService)
-        {
-            this._clienteService = clienteService;
+        public ClienteController(IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO> clienteService)
+        {       
+            _clienteService = clienteService;
         }
 
-        // GET: ClienteController
         [HttpGet]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> IndexAsync()
         {
-            //Manejamos errores en ejecución
             try
             {
-                //Retornamos un Ok de lo que devuelva el service de obtener todo
-                return Ok(await _clienteService.obtenerTodosAsync());
+                var response = await _clienteService.ObtenerTodosAsync();
+                return Ok(response);
             }
             catch (Exception)
             {
-                return BadRequest("Error al mostrar todos lo Clientes");
+                return StatusCode(500, "Error de servidor, contacte con el servidor");
             }
         }
 
-        // GET: ClienteController/Details/5
         [HttpGet("{id}")]
-        public async Task<ActionResult> Details(int id)
+        public async Task<ActionResult> ByIdAsync(int id)
         {
             try
             {
-                //Retornamos el cliente obtenido por el id
-                return Ok(await _clienteService.ObtenerPorIdAsync(id));
-            }
-            //Capturamos errores de validaciones de negocio
-            catch (BusinessValidationException ex)
-            {
-                return BadRequest(ex.Message);
+                var response = await _clienteService.ObtenerPorIdAsync(id);
+                return Ok(response);
             }
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
-            catch (Exception)
+            catch
             {
-                return BadRequest("Error al buscar el cliente");
+                return StatusCode(500, "Error de servidor, contacte con el servidor");
             }
         }
 
-        // POST: ClienteController/Create
         [HttpPost]
-        public async Task<ActionResult> Create(Cliente cliente)
+        public async Task<ActionResult> Create([FromBody] ClienteCreateDTO clienteDTO)
         {
             try
             {
-                //Creamos el cliente
-                var result = await _clienteService.CrearAsync(cliente);
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
 
-                //Retornamos el cliente creado
-                return Created($"/api/clientes/{result.IdCliente}", result);
+                var response = await _clienteService.CrearAsync(clienteDTO);
+                return Created("cliente creado", response);
             }
-            //Capturamos errores de validaciones de negocio
-            catch (BusinessValidationException ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (DuplicateClientIdentificationException ex)
-            {
-                return Conflict(ex.Message);
-            }
-            catch (ClientEmailAlreadyExistsException ex)
-            {
-                return Conflict(ex.Message);
-            }
-            catch (ConflictException ex)
-            {
-                return Conflict(ex.Message);
-            }
-            catch (Exception)
-            {
-                return BadRequest("Error al crear el cliente");
-            }
         }
 
-        // POST: ClienteController/Edit/5
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Edit(int id, Cliente Cliente)
-        {
-            try
-            {
-                //Actualizamos el cliente
-                return Ok(await _clienteService.ActualizarAsync(id, Cliente));
-            }
-            //Capturamos errores de validaciones de negocio
-            catch (BusinessValidationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (DuplicateClientIdentificationException ex)
-            {
-                return Conflict(ex.Message);
-            }
-            catch (ClientEmailAlreadyExistsException ex)
-            {
-                return Conflict(ex.Message);
-            }
-            catch (ConflictException ex)
-            {
-                return Conflict(ex.Message);
-            }
-            catch (Exception)
-            {
-                return BadRequest("Error al Acutualizar el cliente");
-            }
-        }
-
-        // DELETE: ClienteController/Delete/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteAsync(int id)
         {
             try
             {
-                //Eliminamos el cliente
-                return Ok(await _clienteService.EliminarAsync(id));
-            }
-            //Capturamos errores de validaciones de negocio
-            catch (BusinessValidationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (NotFoundException ex)
-            {
-                return NotFound("Error al Eliminar el cliente");
+                if (id <= 0)
+                    return BadRequest("Error al eliminar, id invalido");
+
+                var response = await _clienteService.EliminarAsync(id);
+                return response.Success ? Ok(response) : BadRequest(response);
             }
             catch (Exception)
             {
-                return BadRequest("Error al Eliminar el cliente");
+                return StatusCode(500, "Error de servidor, contacte con el servidor");
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> EditAsync([FromBody] ClienteUpdateDTO clienteDTO)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return BadRequest(ModelState);
+
+                var response = await _clienteService.ActualizarAsync(clienteDTO);
+                return Created("cliente editado", response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }
