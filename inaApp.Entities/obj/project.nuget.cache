@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "T78s+lQFEiE=",
+  "dgSpecHash": "+R4ABclZXGo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApp.Entities\\inaApp.Entities.csproj",
+  "projectFilePath": "C:\\Users\\melod\\source\\repos\\InaApp\\inaApp.Entities\\inaApp.Entities.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\melod\\.nuget\\packages\\microsoft.entityframeworkcore\\9.0.16\\microsoft.entityframeworkcore.9.0.16.nupkg.sha512",
     "C:\\Users\\melod\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\9.0.16\\microsoft.entityframeworkcore.abstractions.9.0.16.nupkg.sha512",

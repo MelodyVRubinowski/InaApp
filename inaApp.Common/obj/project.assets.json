@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApp.Common\\inaApp.Common.csproj",
+      "projectUniqueName": "C:\\Users\\melod\\source\\repos\\InaApp\\inaApp.Common\\inaApp.Common.csproj",
       "projectName": "inaApp.Common",
-      "projectPath": "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApp.Common\\inaApp.Common.csproj",
+      "projectPath": "C:\\Users\\melod\\source\\repos\\InaApp\\inaApp.Common\\inaApp.Common.csproj",
       "packagesPath": "C:\\Users\\melod\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApp.Common\\obj\\",
+      "outputPath": "C:\\Users\\melod\\source\\repos\\InaApp\\inaApp.Common\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

@@ -6,7 +6,7 @@ using inaApp.Common.Response;
 using inaApp.DTOs.Categoria;
 using inaApp.Services;
 using Microsoft.AspNetCore.Mvc;
-using inaApp.Common.interfaces;
+using inaApp.Common.Interfaces;
 
 namespace inaApi.Controllers
 {

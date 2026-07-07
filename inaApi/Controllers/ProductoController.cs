@@ -1,5 +1,5 @@
 ﻿using inaApp.Common.Exceptions;
-using inaApp.Common.interfaces;
+using inaApp.Common.Interfaces;
 using inaApp.DTOs.Producto;
 using inaApp.Entities;
 using inaApp.Repository;
@@ -14,7 +14,6 @@ namespace inaApp.Api.Controllers
     public class ProductoController : Controller
     {
 
-        //inyeccion de dependencia
         private readonly IGenericService<ProductoResponseDTO,ProductoCreateDTO,ProductoUpdateDTO> _productoService;
         
 
@@ -24,7 +23,6 @@ namespace inaApp.Api.Controllers
             
         }
 
-        // GET: ProductoController
 
         [HttpGet]
         public async Task<ActionResult> IndexAsync()
@@ -55,14 +53,9 @@ namespace inaApp.Api.Controllers
             {
                 var producto = await _productoService.ObtenerPorIdAsync(id);
 
-                //if (result == null)
-                //{
-                //    return NotFound("Producto no encontrado");
-                //}
-
                 return Ok(producto);
             }
-            catch (NotFoundException ex)//aqui usammos la exepcion personalizada
+            catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
@@ -71,31 +64,17 @@ namespace inaApp.Api.Controllers
             }
         }
 
-        // GET: ProductoController/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        //// GET: ProductoController/Create
-        //public ActionResult Create()
-        //{
-
-
-
-        //    return View();
-        //}
-
-        // POST: ProductoController/Create
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] ProductoCreateDTO productoDTO)
         {
             try
             {
 
-              //  productoDTO.Estado = true;
-
-                //Validar los datos de entrada
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
 
@@ -121,29 +100,6 @@ namespace inaApp.Api.Controllers
                     "Error de servidor, contacte con el administrador");
             }
         }
-
-        //// GET: ProductoController/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: ProductoController/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(IndexAsync));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        // GET: ProductoController/Delete/5
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
@@ -173,7 +129,6 @@ namespace inaApp.Api.Controllers
 
                 if (!ModelState.IsValid)
                     return BadRequest(ModelState);
-                // producto.Estado = true;
                 var response = await _productoService.ActualizarAsync(producto);
 
                 return Ok(response);

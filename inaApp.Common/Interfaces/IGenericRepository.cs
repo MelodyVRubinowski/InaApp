@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace inaApp.Common.interfaces
+namespace inaApp.Common.Interfaces
 {
     public interface IGenericRepository<E>
     {

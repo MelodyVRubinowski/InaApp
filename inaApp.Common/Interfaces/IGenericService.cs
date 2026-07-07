@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using inaApp.Common.Response;
-//using inaApp.Entities;
 
-namespace inaApp.Common.interfaces
+namespace inaApp.Common.Interfaces
 {
     public interface IGenericService<TResponse,TCreate,TUpdate>
     {

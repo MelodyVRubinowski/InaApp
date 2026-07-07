@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using inaApp.Common.interfaces;
+using inaApp.Common.Interfaces;
 using inaApp.Data;
 using inaApp.Entities;
 using Microsoft.EntityFrameworkCore;

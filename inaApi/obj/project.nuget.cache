@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "kUlmCzjOHDc=",
+  "dgSpecHash": "WDha/CtRSyo=",
   "success": true,
-  "projectFilePath": "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApi\\inaApp.Api.csproj",
+  "projectFilePath": "C:\\Users\\melod\\source\\repos\\InaApp\\inaApi\\inaApp.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\melod\\.nuget\\packages\\automapper\\16.1.1\\automapper.16.1.1.nupkg.sha512",
     "C:\\Users\\melod\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",

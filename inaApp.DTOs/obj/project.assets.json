@@ -623,11 +623,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApp.DTOs\\inaApp.DTOs.csproj",
+      "projectUniqueName": "C:\\Users\\melod\\source\\repos\\InaApp\\inaApp.DTOs\\inaApp.DTOs.csproj",
       "projectName": "inaApp.DTOs",
-      "projectPath": "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApp.DTOs\\inaApp.DTOs.csproj",
+      "projectPath": "C:\\Users\\melod\\source\\repos\\InaApp\\inaApp.DTOs\\inaApp.DTOs.csproj",
       "packagesPath": "C:\\Users\\melod\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApp.DTOs\\obj\\",
+      "outputPath": "C:\\Users\\melod\\source\\repos\\InaApp\\inaApp.DTOs\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -649,11 +649,11 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApp.Common\\inaApp.Common.csproj": {
-              "projectPath": "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApp.Common\\inaApp.Common.csproj"
+            "C:\\Users\\melod\\source\\repos\\InaApp\\inaApp.Common\\inaApp.Common.csproj": {
+              "projectPath": "C:\\Users\\melod\\source\\repos\\InaApp\\inaApp.Common\\inaApp.Common.csproj"
             },
-            "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApp.Entities\\inaApp.Entities.csproj": {
-              "projectPath": "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\inaApp.Entities\\inaApp.Entities.csproj"
+            "C:\\Users\\melod\\source\\repos\\InaApp\\inaApp.Entities\\inaApp.Entities.csproj": {
+              "projectPath": "C:\\Users\\melod\\source\\repos\\InaApp\\inaApp.Entities\\inaApp.Entities.csproj"
             }
           }
         }

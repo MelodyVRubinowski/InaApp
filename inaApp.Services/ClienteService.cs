@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using inaApp.DTOs.Cliente;
 using System.Threading.Tasks;
 using inaApp.Common.Exceptions;
-using inaApp.Common.interfaces;
+using inaApp.Common.Interfaces;
 using inaApp.Entities;
 using inaApp.Repository;
 using AutoMapper;

@@ -10,7 +10,7 @@
         "dependencies": {
           "inaApp.Common": "1.0.0",
           "inaApp.Data": "1.0.0",
-          "inaApp.Entites": "1.0.0"
+          "inaApp.Entities": "1.0.0"
         },
         "runtime": {
           "inaApp.Repository.dll": {}
@@ -583,7 +583,7 @@
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "9.0.16",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.16",
-          "inaApp.Entites": "1.0.0"
+          "inaApp.Entities": "1.0.0"
         },
         "runtime": {
           "inaApp.Data.dll": {
@@ -592,15 +592,14 @@
           }
         }
       },
-      "inaApp.Entites/1.0.0": {
+      "inaApp.Entities/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore": "9.0.16",
           "inaApp.Common": "1.0.0"
         },
         "runtime": {
-          "inaApp.Entites.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
+          "InaApp.Entities.dll": {
+            "fileVersion": "0.0.0.0"
           }
         }
       }
@@ -916,7 +915,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "inaApp.Entites/1.0.0": {
+    "inaApp.Entities/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

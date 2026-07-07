@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using inaApp.Common.interfaces;
+using inaApp.Common.Interfaces;
 using inaApp.Data;
 using inaApp.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +12,7 @@ namespace inaApp.Repository
 {
     public class ProductoRepository : IGenericRepository<Producto>
     {
-
-        //inyeccion para usar el db context osea la bd y sus datos
-        private readonly ApplicationDbContext _context;
+private readonly ApplicationDbContext _context;
         public ProductoRepository(ApplicationDbContext context)
         {
             _context = context;
@@ -59,7 +57,7 @@ namespace inaApp.Repository
                 {
                     return false;
                 }
-                //borrado logico
+
                 producto.Estado = false;
                 _context.Producto.Update(producto);
                 await _context.SaveChangesAsync();
@@ -76,13 +74,11 @@ namespace inaApp.Repository
         {
             try
             {
-                return await _context.Producto.Include(p => p.Categoria).Where(x => x.Id == id && x.Estado == true).SingleOrDefaultAsync();//aqui meti lo de include para que salgan las cosas de categoria
+                return await _context.Producto.Include(p => p.Categoria).
+                    Where(x => x.Id == id && x.Estado == true).
+                    SingleOrDefaultAsync();
 
-                //if (entity is null)            
-                //    throw new Exception("No se encontro la entidad");
-
-                //return entity;
-
+                
             }
             catch (Exception ex)
             {
@@ -96,7 +92,7 @@ namespace inaApp.Repository
         {
             try
             {
-                return await _context.Producto.Include(p => p.Categoria).AsNoTracking().Where(x=> x.Estado==true).ToListAsync();//aqui meti lo de include para que salgan las cosas de categoria
+                return await _context.Producto.Include(p => p.Categoria).AsNoTracking().Where(x=> x.Estado==true).ToListAsync();
             }
             catch (Exception ex)
             {

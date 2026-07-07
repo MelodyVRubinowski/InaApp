@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using inaApp.Common.Exceptions;
-using inaApp.Common.interfaces;
+using inaApp.Common.Interfaces;
 using inaApp.Common.Response;
 using inaApp.DTOs.Categoria;
 using inaApp.Entities;

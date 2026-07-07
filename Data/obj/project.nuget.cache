@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NTb2Jh49+z8=",
+  "dgSpecHash": "Zay2bb1Ehu4=",
   "success": true,
-  "projectFilePath": "C:\\Users\\melod\\OneDrive\\Desktop\\cursos INA\\Progra 2026\\inaApp\\Data\\inaApp.Data.csproj",
+  "projectFilePath": "C:\\Users\\melod\\source\\repos\\InaApp\\Data\\inaApp.Data.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\melod\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\melod\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

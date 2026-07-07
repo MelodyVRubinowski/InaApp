@@ -1,5 +1,5 @@
 ﻿using inaApp.Common.Exceptions;
-using inaApp.Common.interfaces;
+using inaApp.Common.Interfaces;
 using inaApp.Entities;
 using Microsoft.AspNetCore.Mvc;
 using inaApp.DTOs.Cliente;
