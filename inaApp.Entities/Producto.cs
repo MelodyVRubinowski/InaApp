@@ -9,17 +9,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace inaApp.Entities
 
-//nivel acceso
-//public: cualquiera accede a la clase
-//private: solo las clases dentro del mismo archivo pueden acceder a la clase 
-//internal: solo pueden acceder clases dentro del mismo proyecto
-//protected: solo clases dentro del mismo proyecto o heredadas
 {
 
     [Table(name: "tbProducto")]
     public class Producto
     {
-        //propiedades : variables que describen un objeto
+    
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -41,10 +36,10 @@ namespace inaApp.Entities
         public string? Descripcion { get; set; }
         public bool Estado { get; set; } = true;
 
-        //relacion con categoria (muchos a uno)
+       
         [ForeignKey("Categoria")]
         public int CategoriaId { get; set; }
         public Categoria Categoria { get; set; } = null!;
-
+        public List<FacturaDetalle> FacturaDetalles { get; set; }
     }
 }

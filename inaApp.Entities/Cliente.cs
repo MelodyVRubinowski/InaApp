@@ -50,5 +50,6 @@ namespace inaApp.Entities
         public bool Activo { get; set; } = true;
 
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
+        public List<Factura> Facturas { get; set; }
     }
 }
