@@ -1,0 +1,48 @@
+﻿@model inaApp.ProyectoINAApp.Models.Cliente.ClienteEditViewModel
+@{
+    ViewData["Title"] = "Eliminar Cliente";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-exclamation-triangle-fill"></i> Confirmar Eliminación
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted">¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.</p>
+
+                    <div class="alert alert-light border">
+                        <h5 class="alert-heading">Cliente a eliminar:</h5>
+                        <hr>
+                        <dl class="row mb-0">
+                            <dt class="col-sm-4">Nombre:</dt>
+                            <dd class="col-sm-8 fw-bold">@Model.Nombre @Model.PrimerApellido</dd>
+
+                            <dt class="col-sm-4">Identificación:</dt>
+                            <dd class="col-sm-8 font-monospace">@Model.NumeroIdentificacion</dd>
+
+                            <dt class="col-sm-4">Correo:</dt>
+                            <dd class="col-sm-8">@Model.CorreoElectronico</dd>
+                        </dl>
+                    </div>
+
+                    <form asp-action="Delete" method="post">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="NumeroIdentificacion" />
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash"></i> Sí, Eliminar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

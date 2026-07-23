@@ -1,0 +1,71 @@
+﻿@model inaApp.ProyectoINAApp.Models.Cliente.ClienteCreateViewModel
+
+<h2>Crear Nuevo Cliente</h2>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+    <!-- Sección: Identificación -->
+    <div class="mb-3">
+        <label asp-for="TipoIdentificacion" class="form-label"></label>
+        <select asp-for="TipoIdentificacion" class="form-select" asp-items="ViewBag.TiposIdentificacion">
+            <option value="">-- Seleccione --</option>
+        </select>
+        <span asp-validation-for="TipoIdentificacion" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NumeroIdentificacion" class="form-label"></label>
+        <input asp-for="NumeroIdentificacion" class="form-control" placeholder="Ej: 123456789" />
+        <span asp-validation-for="NumeroIdentificacion" class="text-danger"></span>
+    </div>
+
+    <hr />
+
+    <!-- Sección: Datos Personales -->
+    <div class="mb-3">
+        <label asp-for="Nombre" class="form-label"></label>
+        <input asp-for="Nombre" class="form-control" placeholder="Ingrese el nombre completo" />
+        <span asp-validation-for="Nombre" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PrimerApellido" class="form-label"></label>
+        <input asp-for="PrimerApellido" class="form-control" />
+        <span asp-validation-for="PrimerApellido" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SegundoApellido" class="form-label"></label>
+        <input asp-for="SegundoApellido" class="form-control" />
+        <small class="text-muted">Opcional</small>
+        <span asp-validation-for="SegundoApellido" class="text-danger"></span>
+    </div>
+
+    <hr />
+
+    <!-- Sección: Contacto -->
+    <div class="mb-3">
+        <label asp-for="CorreoElectronico" class="form-label"></label>
+        <input asp-for="CorreoElectronico" type="email" class="form-control" />
+        <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Telefono" class="form-label"></label>
+        <input asp-for="Telefono" type="tel" class="form-control" />
+        <span asp-validation-for="Telefono" class="text-danger"></span>
+    </div>
+
+    <!-- Botones -->
+    <button type="submit" class="btn btn-success">
+        Guardar
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">
+        Cancelar
+    </a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
