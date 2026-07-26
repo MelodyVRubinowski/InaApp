@@ -1,48 +1,25 @@
-﻿@model inaApp.ProyectoINAApp.Models.Cliente.ClienteEditViewModel
+﻿@model inaApp.ProyectoINAApp.Models.Factura.FacturaEditViewModel
 @{
-    ViewData["Title"] = "Eliminar Cliente";
+    ViewData["Title"] = "Eliminar Factura";
 }
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-sm border-danger">
-                <div class="card-header bg-danger text-white">
-                    <h4 class="mb-0">
-                        <i class="bi bi-exclamation-triangle-fill"></i> Confirmar Eliminación
-                    </h4>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted">¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.</p>
+<div class="container">
+    <h2 class="text-danger">¿Está seguro de que desea anular esta factura?</h2>
+    <div class="alert alert-warning">
+        Esta acción es irreversible y podría afectar el stock de los productos.
+    </div>
 
-                    <div class="alert alert-light border">
-                        <h5 class="alert-heading">Cliente a eliminar:</h5>
-                        <hr>
-                        <dl class="row mb-0">
-                            <dt class="col-sm-4">Nombre:</dt>
-                            <dd class="col-sm-8 fw-bold">@Model.Nombre @Model.PrimerApellido</dd>
-
-                            <dt class="col-sm-4">Identificación:</dt>
-                            <dd class="col-sm-8 font-monospace">@Model.NumeroIdentificacion</dd>
-
-                            <dt class="col-sm-4">Correo:</dt>
-                            <dd class="col-sm-8">@Model.CorreoElectronico</dd>
-                        </dl>
-                    </div>
-
-                    <form asp-action="Delete" method="post">
-                        <input type="hidden" asp-for="Id" />
-                        <input type="hidden" asp-for="NumeroIdentificacion" />
-
-                        <div class="d-flex justify-content-between mt-4">
-                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-danger">
-                                <i class="bi bi-trash"></i> Sí, Eliminar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+    <div class="card mb-4">
+        <div class="card-body">
+            <p><strong>Número:</strong> @Model.NumeroFactura</p>
+            <p><strong>Cliente:</strong> @Model.ClienteNombre</p>
+            <p><strong>Total:</strong> @Model.Total.ToString("C")</p>
         </div>
     </div>
+
+    <form asp-action="AnularConfirmed">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger btn-lg">Sí, Anular Factura</button>
+        <a asp-action="Index" class="btn btn-secondary btn-lg">Cancelar</a>
+    </form>
 </div>

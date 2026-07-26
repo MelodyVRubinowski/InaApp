@@ -36,11 +36,11 @@ namespace inaApp.Services
             if (string.IsNullOrWhiteSpace(entity.NumeroIdentificacion))
                 throw new RequiredFieldException("El número de identificación es requerido");
 
-            if (!string.IsNullOrWhiteSpace(entity.CorreoElectronico))
+            if (!string.IsNullOrWhiteSpace(entity.Correo))
             {
                 string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-                if (!Regex.IsMatch(entity.CorreoElectronico, emailPattern))
-                    throw new InvalidEmailException($"El correo '{entity.CorreoElectronico}' no es válido");
+                if (!Regex.IsMatch(entity.Correo, emailPattern))
+                    throw new InvalidEmailException($"El correo '{entity.Correo}' no es válido");
             }
 
             if (!string.IsNullOrWhiteSpace(entity.Telefono))
@@ -94,8 +94,7 @@ namespace inaApp.Services
 
             var clientes = await _clienteRepo.obtenerTodosAsync();
             if (clientes.Any(c => c.TipoIdentificacion == entity.TipoIdentificacion &&
-                                  c.NumeroIdentificacion == entity.NumeroIdentificacion &&
-                                  c.Id != entity.Id))
+                                  c.NumeroIdentificacion == entity.NumeroIdentificacion ))
             {
                 throw new DuplicateClientException($"Ya existe un cliente con identificación {entity.NumeroIdentificacion}");
             }

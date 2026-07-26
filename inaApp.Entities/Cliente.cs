@@ -18,12 +18,14 @@ namespace inaApp.Entities
     public class Cliente
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required]
         public int Id { get; set; }
+
 
         [Required]
         public TipoIdentificacion TipoIdentificacion { get; set; }
 
+  
         [Required]
         [MaxLength(20)]
         public string NumeroIdentificacion { get; set; } = string.Empty;
@@ -50,6 +52,6 @@ namespace inaApp.Entities
         public bool Activo { get; set; } = true;
 
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
-        public List<Factura> Facturas { get; set; }
+        public List<Factura> Factura { get; set; }
     }
 }

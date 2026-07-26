@@ -1,5 +1,8 @@
-﻿namespace inaApp.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace inaApp.Entities
 {
+    [Table("tbFacturaDetalle")]
     public class FacturaDetalle
     {
         public int Id { get; set; }
@@ -16,5 +19,6 @@
         public decimal Subtotal { get; set; }
         public decimal Impuesto { get; set; }
         public decimal TotalLinea { get; set; }
+     
     }
 }

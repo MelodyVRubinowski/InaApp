@@ -1,168 +1,216 @@
-﻿using inaApp.Data;
+﻿using AutoMapper;
+using inaApp.Common.Interfaces;
+using inaApp.ProyectoINAApp.Controllers;
+using inaApp.Data;
 using inaApp.DTOs;
 using inaApp.DTOs.Cliente;
 using inaApp.DTOs.Producto;
 using inaApp.DTOs.ViewModels;
-using inaApp.Entities;
 using inaApp.ProyectoINAApp.Models.Factura;
-using inaApp.Services;
+using inaApp.Services.Interfaces;
 using inaApp.Web.ViewModels.Factura;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace InaApp.Web.Controllers // Cambia esto por el namespace de tu proyecto web (ej: webApiINA.Controllers)
+
+namespace InaApp.ProyectoINAApp.Controllers
 {
     public class FacturaController : Controller
     {
-        private readonly FacturaService _facturaService;
+        private readonly IFacturaService _facturaService;
+        private readonly IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO> _clienteService;
+        private readonly IGenericService<ProductoResponseDTO, ProductoCreateDTO, ProductoUpdateDTO> _productoService;
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
 
-        public FacturaController(FacturaService facturaService, ApplicationDbContext context)
+        public FacturaController(IFacturaService facturaService,
+            IGenericService<ClienteResponseDTO, ClienteCreateDTO, ClienteUpdateDTO> clienteService,
+            IGenericService<ProductoResponseDTO, ProductoCreateDTO, ProductoUpdateDTO> productoService,
+            ApplicationDbContext context,
+            IMapper mapper)
         {
             _facturaService = facturaService;
+            _clienteService = clienteService;
+            _productoService = productoService;
             _context = context;
+            _mapper = mapper;
         }
 
         // 1. INDEX: Listar facturas (Maestro)
         public async Task<IActionResult> Index()
         {
-            var facturas = await _context.Facturas
+            // 1. Obtener y mapear la lista de facturas
+            var facturas = await _context.Factura
                 .Include(f => f.Cliente)
                 .OrderByDescending(f => f.Fecha)
+                .Select(f => new FacturaIndexViewModel // CAMBIO: Mapear directamente al ViewModel que usará la vista
+                {
+                    Id = f.Id,
+                    NumeroFactura = f.NumeroFactura,
+                    Fecha = f.Fecha,
+                    ClienteNombre = f.Cliente.Nombre ?? f.Cliente.NumeroIdentificacion,
+                    ClienteIdentificacion = f.Cliente.NumeroIdentificacion,
+                    Subtotal = f.Subtotal,
+                    Impuesto = f.Impuesto,
+                    Descuento = f.Descuento,
+                    Total = f.Total,
+                    Estado = f.Estado,
+                    // La propiedad 'Facturas' interna ya no es necesaria aquí si la vista usa la lista principal
+                    Facturas = null
+                })
                 .ToListAsync();
 
-            var modelo = facturas.Select(f => new FacturaIndexViewModel
-            {
-                Id = f.Id,
-                NumeroFactura = f.NumeroFactura,
-                Fecha = f.Fecha,
-                ClienteIdentificacion = f.Cliente.NumeroIdentificacion,
-                ClienteNombre = f.Cliente.Nombre, // Asegúrate que tu entidad Cliente tenga 'Nombre'
-                Subtotal = f.Subtotal,
-                Impuesto = f.Impuesto,
-                Descuento = f.Descuento,
-                Total = f.Total,
-                Estado = f.Estado
-            }).ToList();
-
-            return View(modelo);
+            // 2. Devolver la LISTA directamente a la vista
+            return View(facturas);
         }
-
         // 2. CREATE (GET): Mostrar formulario vacío
         public async Task<IActionResult> Create()
         {
+            // 1. Obtener Clientes (Normalmente esto no falla, pero por seguridad podrías hacerlo igual)
+            var respuestaClientes = await _clienteService.ObtenerTodosAsync();
+            var listaClientes = respuestaClientes.Data ?? new List<ClienteResponseDTO>();
+
+            // 2. Obtener Productos con manejo de error específico
+            List<ProductoResponseDTO> listaProductos;
+            try
+            {
+                var respuestaProductos = await _productoService.ObtenerTodosAsync();
+                listaProductos = respuestaProductos.Data ?? new List<ProductoResponseDTO>();
+            }
+            catch (Exception ex) when (ex is inaApp.ProyectoINAApp.Controllers.NotFoundException || ex.Message.Contains("No hay productos registrados"))
+            {
+                // Si el servicio lanza la excepción, capturamos y asignamos una lista vacía
+                // Esto permite que la vista se renderice aunque no haya productos
+                listaProductos = new List<ProductoResponseDTO>();
+
+                // Opcional: Guardar un mensaje temporal para mostrar en la vista
+                TempData["MensajeAdvertencia"] = "No hay productos registrados. Agrega productos para poder crear facturas.";
+            }
+
+            // 3. Creamos el modelo para la vista
             var model = new FacturaCreateViewModel
             {
-                // Cargar listas para los selects (Maestro y Detalle)
-                ListaClientes = await _context.Cliente
-                    .Select(c => new ClienteResponseDTO
-                    {
-                        Id = c.Id,
-                        Nombre = c.Nombre ?? c.NumeroIdentificacion,
-                        NumeroIdentificacion = c.NumeroIdentificacion
-                    }).ToListAsync(),
+                NumeroFactura = GenerarNumeroFactura(),
+                Fecha = DateTime.Now,
 
-                ListaProductos = await _context.Producto
-                    .Select(p => new ProductoResponseDTO
-                    {
-                        Id = p.Id,
-                        Nombre = p.Nombre,
-                        Precio = p.Precio,
-                        Stock = p.Stock
-                    }).ToListAsync()
+                // Mapear listas
+                ListaClientes = listaClientes.Select(c => new ClienteResponseDTO
+                {
+                    Id = c.Id,
+                    Nombre = c.Nombre ?? c.NumeroIdentificacion,
+                    NumeroIdentificacion = c.NumeroIdentificacion
+                }).ToList(),
+
+                ListaProductos = listaProductos.Select(p => new ProductoResponseDTO
+                {
+                    Id = p.Id,
+                    Nombre = p.Nombre,
+                    Precio = p.Precio,
+                    Stock = p.Stock
+                }).ToList(),
             };
-
-            // Inicializar listas vacías para la tabla dinámica
-        //    model.DetallesTemporales = new List<DetalleLineaViewModel>();
 
             return View(model);
         }
-
         // 3. CREATE (POST): Recibir datos (Maestro + Detalle) y guardar
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(FacturaCreateViewModel model)
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Create(FacturaCreateViewModel model)
+{
+    // 1. Recargar listas para los selects (SOLO si hay errores de validación)
+    // Extraemos la lista real del Response
+    var respuestaClientes = await _clienteService.ObtenerTodosAsync();
+    var respuestaProductos = await _productoService.ObtenerTodosAsync();
+
+    // Asignamos la lista interna (.Data) o una lista vacía si falla
+    var listaClientes = respuestaClientes.Data ?? new List<ClienteResponseDTO>();
+    var listaProductos = respuestaProductos.Data ?? new List<ProductoResponseDTO>();
+
+    // 2. Ahora sí, usamos .Select() sobre las listas extraídas
+    model.ListaClientes = listaClientes.Select(c => new ClienteResponseDTO
+    {
+        Id = c.Id,
+        Nombre = c.Nombre ?? c.NumeroIdentificacion,
+        NumeroIdentificacion = c.NumeroIdentificacion
+    }).ToList();
+
+    model.ListaProductos = listaProductos.Select(p => new ProductoResponseDTO
+    {
+        Id = p.Id,
+        Nombre = p.Nombre,
+        Precio = p.Precio,
+        Stock = p.Stock
+    }).ToList();
+
+    // ... resto de tu código (validaciones, try-catch, etc.) ...
+    
+    // Validación de negocio: ¿Hay al menos un detalle?
+    if (model.DetallesTemporales == null || !model.DetallesTemporales.Any())
+    {
+        TempData["Error"] = "Debe agregar al menos un producto a la factura.";
+        return View(model);
+    }
+
+    // Validar que haya cliente seleccionado
+    if (model.Id <= 0)
+    {
+        TempData["Error"] = "Debe seleccionar un cliente.";
+        return View(model);
+    }
+
+    try
+    {
+        // Mapear el ViewModel al DTO
+        var dto = new FacturaCreateDTO
         {
-            // Validar que el modelo tenga datos básicos
-            if (!ModelState.IsValid)
+            Id = model.Id,
+            NumeroFactura = model.NumeroFactura,
+            Descuento = model.Descuento ,
+            Detalles = model.DetallesTemporales.Select(d => new FacturaDetalleCreateDTO
             {
-                // Recargar listas si hay error de validación para no perder el select
-                model.ListaClientes = await _context.Cliente.Select(c => new ClienteResponseDTO { Id = c.Id, Nombre = c.Nombre ?? c.NumeroIdentificacion, NumeroIdentificacion = c.NumeroIdentificacion }).ToListAsync();
-                model.ListaProductos = await _context.Producto.Select(p => new ProductoResponseDTO { Id = p.Id, Nombre = p.Nombre, Precio = p.Precio, Stock = p.Stock }).ToListAsync();
-                return View(model);
-            }
+                ProductoId = d.ProductoId,
+                Cantidad = d.Cantidad,
+              //  PrecioUnitario = d.
+            }).ToList()
+        };
 
-            // Validación de negocio: ¿Hay al menos un detalle?
-            if (model.DetallesTemporales == null || !model.DetallesTemporales.Any())
-            {
-                TempData["Error"] = "Debe agregar al menos un producto a la factura.";
-                model.ListaClientes = await _context.Cliente.Select(c => new ClienteResponseDTO { Id = c.Id, Nombre = c.Nombre ?? c.NumeroIdentificacion, NumeroIdentificacion = c.NumeroIdentificacion }).ToListAsync();
-                model.ListaProductos = await _context.Producto.Select(p => new ProductoResponseDTO { Id = p.Id, Nombre = p.Nombre, Precio = p.Precio, Stock = p.Stock }).ToListAsync();
-                return View(model);
-            }
+        // Ejecutar el servicio
+        var resultado = await _facturaService.CrearFacturaAsync(dto);
 
-            try
-            {
-                // Mapear el ViewModel (con la lista temporal) al DTO que espera el Service
-                var dto = new FacturaCreateDTO
-                {
-                    ClienteId = model.ClienteId,
-                    NumeroFactura = model.NumeroFactura,
-                    Descuento = model.Descuento,
-                    // Convertimos la lista de ViewModels a la lista de DTOs
-                    Detalles = model.DetallesTemporales.Select(d => new FacturaDetalleCreateDTO
-                    {
-                        ProductoId = d.ProductoId,
-                        Cantidad = d.Cantidad
-                    }).ToList()
-                };
-
-                // Ejecutar el servicio (Aquí ocurre la magia: Transacción, Cálculos, Stock)
-                await _facturaService.CrearFacturaAsync(dto);
-
-                TempData["Exito"] = $"Factura {dto.NumeroFactura} creada con éxito.";
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                // Capturar errores del Service (stock insuficiente, cliente no existe, etc.)
-                TempData["Error"] = ex.Message;
-
-                // Mantener los datos del formulario para que el usuario no los pierda
-                model.ListaClientes = await _context.Cliente.Select(c => new ClienteResponseDTO { Id = c.Id, Nombre = c.Nombre ?? c.NumeroIdentificacion, NumeroIdentificacion = c.NumeroIdentificacion }).ToListAsync();
-                model.ListaProductos = await _context.Producto.Select(p => new ProductoResponseDTO { Id = p.Id, Nombre = p.Nombre, Precio = p.Precio, Stock = p.Stock }).ToListAsync();
-
-                // Mantener los detalles que ya agregó el usuario (si es posible, o limpiar si el error fue grave)
-                // Aquí mantenemos la lista temporal para que el usuario corrija
-                return View(model);
-            }
-        }
-
+        TempData["Exito"] = $"Factura {dto.NumeroFactura} creada con éxito.";
+                return RedirectToAction(nameof(Details), new { Id= resultado.Id});
+    }
+    catch (Exception ex)
+    {
+        // Capturar errores del Service
+        TempData["Error"] = ex.Message;
+        return View(model);
+    }
+}
         // 4. DETAILS: Ver factura completa (Maestro + Detalle)
         public async Task<IActionResult> Details(int id)
         {
-            var factura = await _context.Facturas
+            var factura = await _context.Factura
                 .Include(f => f.Cliente)
-                .Include(f => f.Detalles).ThenInclude(d => d.Producto)
+                .Include(f => f.FacturaDetalles)
+                    .ThenInclude(d => d.Producto)
                 .FirstOrDefaultAsync(f => f.Id == id);
 
-            if (factura == null) return NotFound();
+            if (factura == null)
+                return NotFound();
 
             var model = new FacturaDetalleViewModel
             {
                 NumeroFactura = factura.NumeroFactura,
                 Fecha = factura.Fecha,
                 ClienteNombre = factura.Cliente.Nombre ?? factura.Cliente.NumeroIdentificacion,
-                ClienteIdentificacion = factura.Cliente.NumeroIdentificacion,
+                ClienteId = factura.Cliente.NumeroIdentificacion,
                 Estado = factura.Estado,
                 Subtotal = factura.Subtotal,
                 Impuesto = factura.Impuesto,
                 Descuento = factura.Descuento,
                 Total = factura.Total,
-                Detalles = factura.Detalles.Select(d => new FacturaDetailsViewModel
+                Detalles = factura.FacturaDetalles.Select(d => new FacturaDetailsViewModel
                 {
                     ProductoNombre = d.Producto.Nombre,
                     Cantidad = d.Cantidad,
@@ -181,8 +229,9 @@ namespace InaApp.Web.Controllers // Cambia esto por el namespace de tu proyecto 
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Anular(int id)
         {
-            var factura = await _context.Facturas.FindAsync(id);
-            if (factura == null) return NotFound();
+            var factura = await _context.Factura.FindAsync(id);
+            if (factura == null)
+                return NotFound();
 
             if (factura.Estado == "Anulada")
             {
@@ -190,14 +239,31 @@ namespace InaApp.Web.Controllers // Cambia esto por el namespace de tu proyecto 
                 return RedirectToAction(nameof(Details), new { id });
             }
 
-            // Lógica simple: Solo cambia el estado
-            // Nota: En un sistema real, aquí también deberías revertir el stock si es necesario
-            factura.Estado = "Anulada";
+            try
+            {
+                await _facturaService.AnularFacturaAsync(id);
+                TempData["Exito"] = "Factura anulada correctamente.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
 
-            await _context.SaveChangesAsync();
-
-            TempData["Exito"] = "Factura anulada correctamente.";
             return RedirectToAction(nameof(Details), new { id });
+        }
+
+        // Método auxiliar para generar número de factura
+        private string GenerarNumeroFactura()
+        {
+            var ultimaFactura = _context.Factura
+                .OrderByDescending(f => f.Fecha)
+                .FirstOrDefault();
+
+            if (ultimaFactura == null)
+                return "F000001";
+
+            var numero = int.Parse(ultimaFactura.NumeroFactura.Replace("F", "")) + 1;
+            return $"F{numero:D6}";
         }
     }
 }

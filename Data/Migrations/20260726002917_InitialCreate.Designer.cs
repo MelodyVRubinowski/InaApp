@@ -12,7 +12,7 @@ using inaApp.Data;
 namespace inaApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260706192858_InitialCreate")]
+    [Migration("20260726002917_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -98,6 +98,99 @@ namespace inaApp.Data.Migrations
                     b.ToTable("tbCliente");
                 });
 
+            modelBuilder.Entity("inaApp.Entities.Factura", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ClienteId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Descuento")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaCreacion")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Impuesto")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("NumeroFactura")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("Total")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.HasIndex("NumeroFactura")
+                        .IsUnique();
+
+                    b.ToTable("tbFactura");
+                });
+
+            modelBuilder.Entity("inaApp.Entities.FacturaDetalle", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FacturaId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Impuesto")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("PrecioUnitario")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<decimal>("TotalLinea")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FacturaId");
+
+                    b.HasIndex("ProductoId");
+
+                    b.ToTable("tbFacturaDetalle");
+                });
+
             modelBuilder.Entity("inaApp.Entities.Producto", b =>
                 {
                     b.Property<int>("Id")
@@ -134,12 +227,42 @@ namespace inaApp.Data.Migrations
                     b.ToTable("tbProducto");
                 });
 
+            modelBuilder.Entity("inaApp.Entities.Factura", b =>
+                {
+                    b.HasOne("inaApp.Entities.Cliente", "Cliente")
+                        .WithMany("Factura")
+                        .HasForeignKey("ClienteId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cliente");
+                });
+
+            modelBuilder.Entity("inaApp.Entities.FacturaDetalle", b =>
+                {
+                    b.HasOne("inaApp.Entities.Factura", "Factura")
+                        .WithMany("FacturaDetalles")
+                        .HasForeignKey("FacturaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("inaApp.Entities.Producto", "Producto")
+                        .WithMany("FacturaDetalles")
+                        .HasForeignKey("ProductoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Factura");
+
+                    b.Navigation("Producto");
+                });
+
             modelBuilder.Entity("inaApp.Entities.Producto", b =>
                 {
                     b.HasOne("inaApp.Entities.Categoria", "Categoria")
                         .WithMany("Productos")
                         .HasForeignKey("CategoriaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Categoria");
@@ -148,6 +271,21 @@ namespace inaApp.Data.Migrations
             modelBuilder.Entity("inaApp.Entities.Categoria", b =>
                 {
                     b.Navigation("Productos");
+                });
+
+            modelBuilder.Entity("inaApp.Entities.Cliente", b =>
+                {
+                    b.Navigation("Factura");
+                });
+
+            modelBuilder.Entity("inaApp.Entities.Factura", b =>
+                {
+                    b.Navigation("FacturaDetalles");
+                });
+
+            modelBuilder.Entity("inaApp.Entities.Producto", b =>
+                {
+                    b.Navigation("FacturaDetalles");
                 });
 #pragma warning restore 612, 618
         }

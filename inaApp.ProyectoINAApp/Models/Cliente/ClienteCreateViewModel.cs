@@ -1,45 +1,45 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using static inaApp.Common.Enums.Enumeradores;
 
-namespace inaApp.ProyectoINAApp.Models.Cliente
+
+namespace InaApp.ProyectoInaApp.Models.Cliente
 {
     public class ClienteCreateViewModel
     {
-        [Display(Name = "Tipo de identificación")]
-        [Required(ErrorMessage = "El tipo de identificación es obligatorio.")]
-        public TipoIdentificacion TipoIdentificacion { get; set; }
+        [Required(ErrorMessage = "Campo obligatorio.")]
+        [Range(1, int.MaxValue, ErrorMessage = "El Id debe ser un numero positivo.")]
+        public int Id { get; set; }
 
-      
-        public SelectList? TiposIdentificacion { get; set; }
-
-        [Display(Name = "Número de identificación")]
-        [Required(ErrorMessage = "El número de identificación es obligatorio.")]
-        [StringLength(20, ErrorMessage = "El número de identificación no debe exceder los 20 caracteres.")]
+        [Required(ErrorMessage = "Campo obligatorio.")]
+        [StringLength(20, ErrorMessage = "La cedula NO debe exeder los 20 caracteres.")]
         public string NumeroIdentificacion { get; set; } = string.Empty;
 
-        [Display(Name = "Nombre")]
-        [Required(ErrorMessage = "El nombre es obligatorio.")]
-        [StringLength(100, ErrorMessage = "El nombre no debe exceder los 100 caracteres.")]
+        [Required(ErrorMessage = "Campo obligatorio.")]
+        public TipoIdentificacion TipoIdentificacion { get; set; }
+
+        [Required(ErrorMessage = "Campo obligatorio.")]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 100 caracteres.")]
         public string Nombre { get; set; } = string.Empty;
 
-        [Display(Name = "Primer apellido")]
-        [Required(ErrorMessage = "El primer apellido es obligatorio.")]
-        [StringLength(50, ErrorMessage = "El primer apellido no debe exceder los 50 caracteres.")]
+        [Required(ErrorMessage = "Campo obligatorio.")]
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "El apellido 1 debe tener entre 3 y 50 caracteres.")]
         public string PrimerApellido { get; set; } = string.Empty;
 
-        [Display(Name = "Segundo apellido")]
-        [StringLength(50, ErrorMessage = "El segundo apellido no debe exceder los 50 caracteres.")]
-        public string? SegundoApellido { get; set; }
+        //el ? es para q permita null
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "El apellido 2 debe tener entre 3 y 50 caracteres.")]
+        public string? SegundoApellido { get; set; } = string.Empty;
 
-        [Display(Name = "Correo electrónico")]
-        [EmailAddress(ErrorMessage = "El correo electrónico no es válido.")]
-        [StringLength(150, ErrorMessage = "El correo electrónico no debe exceder los 150 caracteres.")]
-        public string? CorreoElectronico { get; set; }
+        [EmailAddress(ErrorMessage = "El correo electronico debe tener un formato valido.")]
+        [MaxLength(150, ErrorMessage = "El correo electronico debe tener un maximo de 150 caracteres.")]
+        public string? Correo { get; set; } = string.Empty;
 
-        [Display(Name = "Teléfono")]
-        [Phone(ErrorMessage = "El teléfono no es válido.")]
-        [StringLength(20, ErrorMessage = "El teléfono no debe exceder los 20 caracteres.")]
-        public string? Telefono { get; set; }
+        [Phone(ErrorMessage = "El telefono debe tener un formato valido.")]
+        [MaxLength(20, ErrorMessage = "El telefono debe tener nun maximo de 20 caracteres.")]
+        public string? Telefono { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "Campo obligatorio.")]
+        [DataType(DataType.Date, ErrorMessage = "La fecha debe tener un formato valido.")]
+        public DateOnly FechaNacimiento { get; set; }
+
     }
 }

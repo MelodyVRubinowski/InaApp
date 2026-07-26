@@ -10,15 +10,11 @@ namespace inaApp.DTOs
 {
     public class FacturaCreateDTO
     {
-        public int ClienteId { get; set; }
+        public int Id { get; set; }
         public string NumeroFactura { get; set; } = string.Empty;
         public decimal Descuento { get; set; }
         public List<FacturaDetalleCreateDTO> Detalles { get; set; } = new();
     }
 
-    public class FacturaDetalleCreateDTO
-    {
-        public int ProductoId { get; set; }
-        public int Cantidad { get; set; }
-    }
+   
 }

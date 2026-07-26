@@ -1,40 +1,54 @@
-﻿@using inaApp.ProyectoINAApp.Models.Producto
+﻿@using inaApp.DTOs.ViewModels
+@using inaApp.ProyectoINAApp.Models.Factura
 
-@model ProductoIndexViewModel
+@model FacturaIndexViewModel
 @{
-    ViewData["Title"] = "Detalles del Producto";
+    ViewData["Title"] = "Detalles de la Factura";
 }
 
-<div class="container mt-4">
+<div class="container">
+    <h2>Detalle de Factura #@Model.NumeroFactura</h2>
+    <hr />
 
-    <h2>Detalles del Producto</h2>
-    
-    <div class="card mt-3">
-    
-        <div class="card-header bg-info text-white">
-            Información del Producto
+    <!-- SECCIÓN MAESTRO: Información General -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <p><strong>Fecha:</strong> @Model.Fecha.ToShortDateString()</p>
+            <p><strong>Cliente:</strong> @Model.ClienteNombre</p>
+            <p><strong>Estado:</strong> <span class="badge @(Model.Estado == "Activa" ? "bg-success" : "bg-danger")">@Model.Estado</span></p>
         </div>
-        
-        <div class="card-body">
-            <p><strong>Id:</strong> @Model.Id</p>
-            <p><strong>Nombre:</strong> @Model.Nombre</p>
-            <p><strong>Categoria:</strong> @Model.CategoriaNombre</p>
-            <p><strong>Precio:</strong> ₡@Model.Precio.ToString("N2")</p>
-            <p><strong>Stock:</strong> @Model.Stock</p>
-            <p><strong>Descripción:</strong> @Model.Descripcion</p>
-        </div>
-
     </div>
 
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary mt-3">
-        Editar
-    </a>
-        
-    <a asp-action="Index" class="btn btn-secondary mt-3">
-        Volver al Listado
-    </a>
+    <!-- SECCIÓN DETALLE: Grilla de Productos -->
+    <h4>Productos Comprados</h4>
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Subtotal</th>
+                <th>Impuesto</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
+    </table>
 
+    <!-- RESUMEN DE TOTALES -->
+    <div class="row justify-content-end">
+        <div class="col-md-4 card p-3 shadow-sm">
+            <p class="d-flex justify-content-between"><span>Subtotal:</span> @Model.Subtotal.ToString("C")</p>
+            <p class="d-flex justify-content-between"><span>Impuestos:</span> @Model.Impuesto.ToString("C")</p>
+            <p class="d-flex justify-content-between text-danger"><span>Descuento:</span> -@Model.Descuento.ToString("C")</p>
+            <hr />
+            <h4 class="d-flex justify-content-between text-primary"><span>Total Final:</span> @Model.Total.ToString("C")</h4>
+        </div>
+    </div>
 
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary">Volver al Listado</a>
+    </div>
 </div>
-
-

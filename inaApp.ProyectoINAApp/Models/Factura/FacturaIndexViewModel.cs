@@ -1,5 +1,6 @@
 ﻿using System;
 using inaApp.ProyectoINAApp.Models.Factura;
+using inaApp.Services.Interfaces;
 
 namespace inaApp.DTOs.ViewModels
 {
@@ -17,5 +18,6 @@ namespace inaApp.DTOs.ViewModels
         public decimal Descuento { get; set; }
         public decimal Total { get; set; }
         public string Estado { get; set; } = string.Empty;
+        public List<FacturaListDTO> Facturas { get; internal set; }
     }
 }

@@ -14,48 +14,83 @@ namespace inaApp.Data
         {
         }
 
-        // DbSet (Plural es mejor práctica, aunque singular funciona)
+
         public DbSet<Producto> Producto { get; set; }
         public DbSet<Cliente> Cliente { get; set; }
         public DbSet<Categoria> Categoria { get; set; }
-        public DbSet<Factura> Facturas { get; set; }
-        public DbSet<FacturaDetalle> FacturaDetalles { get; set; }
+        public DbSet<Factura> Factura { get; set; }
+        public DbSet<FacturaDetalle> FacturaDetalle { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // 1. Relación Producto - Categoría (Ya la tenías, la ajusto ligeramente)
+            // 1. Relación Producto - Categoría
             modelBuilder.Entity<Producto>()
                 .HasOne(p => p.Categoria)
                 .WithMany(c => c.Productos)
                 .HasForeignKey(p => p.CategoriaId)
-                .OnDelete(DeleteBehavior.Restrict); // Evita borrar categoría si tiene productos
+                .OnDelete(DeleteBehavior.Restrict);
 
             // 2. Relación Cliente - Factura (MAESTRO)
             modelBuilder.Entity<Factura>()
                 .HasOne(f => f.Cliente)
-                .WithMany(c => c.Facturas) // Asegúrate que Cliente tenga: public List<Factura> Facturas { get; set; }
-                .HasForeignKey(f => f.ClienteId) // La FK en Factura
-                .OnDelete(DeleteBehavior.Restrict); // No borrar cliente si tiene facturas
+                .WithMany(c => c.Factura)
+                .HasForeignKey(f => f.ClienteId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // 3. Relación Factura - FacturaDetalle (MAESTRO - DETALLE)
             modelBuilder.Entity<FacturaDetalle>()
                 .HasOne(fd => fd.Factura)
-                .WithMany(f => f.Detalles) // Asegúrate que Factura tenga: public List<FacturaDetalle> Detalles { get; set; }
-                .HasForeignKey(fd => fd.FacturaId) // La FK en FacturaDetalle
-                .OnDelete(DeleteBehavior.Cascade); // Si borras factura, se borran sus detalles
+                .WithMany(f => f.FacturaDetalles)
+                .HasForeignKey(fd => fd.FacturaId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // 4. Relación Producto - FacturaDetalle
             modelBuilder.Entity<FacturaDetalle>()
                 .HasOne(fd => fd.Producto)
-                .WithMany(p => p.FacturaDetalles) // Asegúrate que Producto tenga: public List<FacturaDetalle> FacturaDetalles { get; set; }
+                .WithMany(p => p.FacturaDetalles)
                 .HasForeignKey(fd => fd.ProductoId);
 
-            // 5. Configuración de Índices Únicos (Evitar números de factura duplicados)
+            // 5. Configuración de Índices Únicos
             modelBuilder.Entity<Factura>()
                 .HasIndex(f => f.NumeroFactura)
                 .IsUnique();
+
+            // 6. CONFIGURACIÓN DE DECIMALES (Para evitar advertencias de precisión)
+            // Configuramos decimal(18, 4) para Factura
+            modelBuilder.Entity<Factura>()
+                .Property(f => f.Descuento)
+                .HasPrecision(18, 4);
+
+            modelBuilder.Entity<Factura>()
+                .Property(f => f.Impuesto)
+                .HasPrecision(18, 4);
+
+            modelBuilder.Entity<Factura>()
+                .Property(f => f.Subtotal)
+                .HasPrecision(18, 4);
+
+            modelBuilder.Entity<Factura>()
+                .Property(f => f.Total)
+                .HasPrecision(18, 4);
+
+            // Configuramos decimal(18, 4) para FacturaDetalle
+            modelBuilder.Entity<FacturaDetalle>()
+                .Property(fd => fd.Impuesto)
+                .HasPrecision(18, 4);
+
+            modelBuilder.Entity<FacturaDetalle>()
+                .Property(fd => fd.PrecioUnitario)
+                .HasPrecision(18, 4);
+
+            modelBuilder.Entity<FacturaDetalle>()
+                .Property(fd => fd.Subtotal)
+                .HasPrecision(18, 4);
+
+            modelBuilder.Entity<FacturaDetalle>()
+                .Property(fd => fd.TotalLinea)
+                .HasPrecision(18, 4);
         }
     }
-}
+} 

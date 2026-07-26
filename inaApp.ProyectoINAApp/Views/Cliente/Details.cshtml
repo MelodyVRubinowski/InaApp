@@ -1,6 +1,7 @@
-﻿@using inaApp.ProyectoINAApp.Models.Producto
+﻿@using InaApp.ProyectoInaApp.Models.Cliente
 
-@model ProductoIndexViewModel
+
+@model ClienteIndexViewModel
 @{
     ViewData["Title"] = "Detalles del Producto";
 }
@@ -16,13 +17,12 @@
         </div>
         
         <div class="card-body">
-            <p><strong>Id:</strong> @Model.Id</p>
+            <pn><strong>Id:</strong> @Model.NumeroIdentificacion</pn>
             <p><strong>Nombre:</strong> @Model.Nombre</p>
-            <p><strong>Categoria:</strong> @Model.CategoriaNombre</p>
-            <p><strong>Precio:</strong> ₡@Model.Precio.ToString("N2")</p>
-            <p><strong>Stock:</strong> @Model.Stock</p>
-            <p><strong>Descripción:</strong> @Model.Descripcion</p>
-        </div>
+            <p><strong>Apellido:</strong> @Model.PrimerApellido</p>
+
+
+            </div>
 
     </div>
 

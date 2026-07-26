@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace inaApp.Entities
 
@@ -20,8 +19,8 @@ namespace inaApp.Entities
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio")]
-        [StringLength(100, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 10 caracteres.")]
-        public string Nombre { get; set; }
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 100 caracteres.")]
+        public required string Nombre { get; set; }
 
         [Required(ErrorMessage = "El precio es obligatorio")]
         [Column(TypeName = "decimal(18,2)")]
@@ -40,6 +39,6 @@ namespace inaApp.Entities
         [ForeignKey("Categoria")]
         public int CategoriaId { get; set; }
         public Categoria Categoria { get; set; } = null!;
-        public List<FacturaDetalle> FacturaDetalles { get; set; }
+        public required List<FacturaDetalle> FacturaDetalles { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace inaApp.Web.ViewModels.Factura
     {
         [Required(ErrorMessage = "Debe seleccionar un cliente.")]
         [Display(Name = "Cédula del Cliente")]
-        public int ClienteId { get; set; }
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "El número de factura es obligatorio.")]
         [Display(Name = "Número de Factura")]
@@ -31,6 +31,8 @@ namespace inaApp.Web.ViewModels.Factura
         public List<ProductoResponseDTO> ListaProductos { get; set; } = new();
 
         public List<FacturaDetalleCreateViewModel> DetallesTemporales { get; set; } = new();
+        public DateTime Fecha { get; internal set; }
+
     }
 
     public class FacturaDetalleCreateViewModel

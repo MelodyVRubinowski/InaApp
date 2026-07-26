@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace inaApp.Entities
 {
-    public class Factura
+        [Table("tbFactura")]
+        public class Factura
     {
         public int Id { get; set; }
         public string NumeroFactura { get; set; } = string.Empty;
@@ -21,8 +24,8 @@ namespace inaApp.Entities
 
         public string Estado { get; set; } = "Activa"; 
         public DateTime FechaCreacion { get; set; } = DateTime.Now;
+        public ICollection<FacturaDetalle> FacturaDetalles { get; set; } = new List<FacturaDetalle>();
 
-   
-        public List<FacturaDetalle> Detalles { get; set; } = new();
     }
 }
+

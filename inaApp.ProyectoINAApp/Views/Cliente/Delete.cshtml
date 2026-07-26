@@ -1,4 +1,7 @@
-﻿@model inaApp.ProyectoINAApp.Models.Cliente.ClienteEditViewModel
+﻿
+@using InaApp.ProyectoInaApp.Models.Cliente
+
+@model ClienteIndexViewModel
 @{
     ViewData["Title"] = "Eliminar Cliente";
 }
@@ -20,13 +23,13 @@
                         <hr>
                         <dl class="row mb-0">
                             <dt class="col-sm-4">Nombre:</dt>
-                            <dd class="col-sm-8 fw-bold">@Model.Nombre @Model.PrimerApellido</dd>
+                            <dd class="col-sm-8 fw-bold">@Model.Nombre @Model.Nombre</dd>
 
                             <dt class="col-sm-4">Identificación:</dt>
                             <dd class="col-sm-8 font-monospace">@Model.NumeroIdentificacion</dd>
 
                             <dt class="col-sm-4">Correo:</dt>
-                            <dd class="col-sm-8">@Model.CorreoElectronico</dd>
+                            <dd class="col-sm-8">@Model.Correo</dd>
                         </dl>
                     </div>
 

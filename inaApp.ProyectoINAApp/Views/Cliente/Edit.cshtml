@@ -1,7 +1,11 @@
-﻿@model inaApp.ProyectoINAApp.Models.Cliente.ClienteEditViewModel
+﻿@using InaApp.ProyectoInaApp.Models.Cliente
+
+
+@model ClienteEditViewModel
 @{
     ViewData["Title"] = "Editar Cliente";
 }
+
 
 <div class="container mt-4">
     <div class="row justify-content-center">
@@ -65,9 +69,9 @@
                         <h5 class="text-secondary mb-3">Información de Contacto</h5>
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label asp-for="CorreoElectronico" class="form-label"></label>
-                                <input asp-for="CorreoElectronico" type="email" class="form-control" />
-                                <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+                                <label asp-for="Correo" class="form-label"></label>
+                                <input asp-for="Correo" type="email" class="form-control" />
+                                <span asp-validation-for="Correo" class="text-danger"></span>
                             </div>
                             <div class="col-md-6">
                                 <label asp-for="Telefono" class="form-label"></label>

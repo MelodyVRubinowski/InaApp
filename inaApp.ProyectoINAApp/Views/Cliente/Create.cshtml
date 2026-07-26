@@ -1,4 +1,10 @@
-﻿@model inaApp.ProyectoINAApp.Models.Cliente.ClienteCreateViewModel
+﻿@using InaApp.ProyectoInaApp.Models.Cliente
+
+@model ClienteCreateViewModel
+@{
+    ViewData["Title"] = "Crear Cliente";
+}
+
 
 <h2>Crear Nuevo Cliente</h2>
 
@@ -46,9 +52,9 @@
 
     <!-- Sección: Contacto -->
     <div class="mb-3">
-        <label asp-for="CorreoElectronico" class="form-label"></label>
-        <input asp-for="CorreoElectronico" type="email" class="form-control" />
-        <span asp-validation-for="CorreoElectronico" class="text-danger"></span>
+        <label asp-for="Correo" class="form-label"></label>
+        <input asp-for="Correo" type="email" class="form-control" />
+        <span asp-validation-for="Correo" class="text-danger"></span>
     </div>
 
     <div class="mb-3">

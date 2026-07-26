@@ -1,4 +1,4 @@
-﻿@using inaApp.ProyectoINAApp.Models.Cliente
+﻿@using InaApp.ProyectoInaApp.Models.Cliente
 
 @model List<ClienteIndexViewModel>
 
@@ -22,7 +22,7 @@
                 <thead class="table-dark">
                     <tr>
                         <th>Identificación</th>
-                        <th>Nombre Completo</th>
+                        <th>Nombre</th>
                         <th>Tipo Identificación</th>
                         <th>Correo Electrónico</th>
                         <th>Teléfono</th>
@@ -37,12 +37,12 @@
                         {
                             <tr>
                                 <td class="font-monospace">@cliente.NumeroIdentificacion</td>
-                                <td>@cliente.NombreCompleto</td> 
+                                <td>@cliente.Nombre</td> 
                                 <td>@cliente.TipoIdentificacion</td> 
                                 <td>
-                                    @if (!string.IsNullOrEmpty(cliente.CorreoElectronico))
+                                    @if (!string.IsNullOrEmpty(cliente.Correo))
                                     {
-                                        <a href="mailto:@cliente.CorreoElectronico" class="text-decoration-none text-primary">@cliente.CorreoElectronico</a>
+                                        <a href="mailto:@cliente.Correo" class="text-decoration-none text-primary">@cliente.Correo</a>
                                     }
                                     else
                                     {

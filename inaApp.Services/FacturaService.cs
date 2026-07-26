@@ -1,4 +1,5 @@
-﻿using inaApp.Data;
+﻿using inaApp.Services.Interfaces;
+using inaApp.Data;
 using inaApp.DTOs;
 using inaApp.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace inaApp.Services
 {
-    public class FacturaService
+    public class FacturaService : IFacturaService
     {
         private readonly ApplicationDbContext _context;
 
@@ -18,15 +19,16 @@ namespace inaApp.Services
             _context = context;
         }
 
+        // Retorna Task<FacturaResponseDTO> directamente
         public async Task<FacturaResponseDTO> CrearFacturaAsync(FacturaCreateDTO dto)
         {
             // 1. Validar Cliente
-            var cliente = await _context.Cliente.FindAsync(dto.ClienteId);
+            var cliente = await _context.Cliente.FindAsync(dto.Id);
             if (cliente == null || !cliente.Activo)
                 throw new Exception("El cliente no existe o no está activo.");
 
             // 2. Validar Número de Factura Único
-            if (await _context.Facturas.AnyAsync(f => f.NumeroFactura == dto.NumeroFactura))
+            if (await _context.Factura.AnyAsync(f => f.NumeroFactura == dto.NumeroFactura))
                 throw new Exception("El número de factura ya existe.");
 
             // 3. Validar y Preparar Detalles
@@ -36,7 +38,7 @@ namespace inaApp.Services
             var detallesEntidades = new List<FacturaDetalle>();
             decimal subtotalGeneral = 0;
             decimal impuestoGeneral = 0;
-            const decimal tasaImpuesto = 0.13m; 
+            const decimal tasaImpuesto = 0.13m;
 
             foreach (var item in dto.Detalles)
             {
@@ -84,42 +86,67 @@ namespace inaApp.Services
                 {
                     NumeroFactura = dto.NumeroFactura,
                     Fecha = DateTime.Now,
-                    ClienteId = dto.ClienteId,
+                    Id = dto.Id,
                     Subtotal = subtotalGeneral,
                     Impuesto = impuestoGeneral,
                     Descuento = dto.Descuento,
                     Total = totalFinal,
                     Estado = "Activa",
-                    Detalles = detallesEntidades
+                    FacturaDetalles = detallesEntidades
                 };
 
-                _context.Facturas.Add(nuevaFactura);
+                _context.Factura.Add(nuevaFactura);
                 await _context.SaveChangesAsync();
 
                 // Actualizar Stock
                 foreach (var detalle in detallesEntidades)
                 {
                     var prod = await _context.Producto.FindAsync(detalle.ProductoId);
-                    prod.Stock -= detalle.Cantidad;
+                    if (prod != null)
+                    {
+                        prod.Stock -= detalle.Cantidad;
+                    }
                 }
                 await _context.SaveChangesAsync();
 
                 await transaction.CommitAsync();
 
-                // Retornar respuesta mapeada (simplificado)
+                // Retornar el DTO directamente
                 return new FacturaResponseDTO
                 {
-                    Id = nuevaFactura.Id,
                     NumeroFactura = nuevaFactura.NumeroFactura,
+                    Fecha = nuevaFactura.Fecha,
+                    Id = nuevaFactura.Id,
                     Total = nuevaFactura.Total,
-                    // ... mapear resto de propiedades
+                    Estado = nuevaFactura.Estado
                 };
             }
-            catch
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                throw;
+                throw new Exception($"Error interno al crear factura: {ex.Message}");
             }
+        }
+
+        // Implementación de los métodos faltantes (deben existir)
+        public async Task<FacturaResponseDTO> AnularFacturaAsync(int id)
+        {
+            throw new NotImplementedException("Método AnularFacturaAsync no implementado.");
+        }
+
+        public async Task<FacturaResponseDTO> ObtenerPorIdAsync(int id)
+        {
+            throw new NotImplementedException("Método ObtenerPorIdAsync no implementado.");
+        }
+
+        public async Task<List<FacturaListDTO>> ObtenerTodasAsync()
+        {
+            throw new NotImplementedException("Método ObtenerTodasAsync no implementado.");
+        }
+
+        public (decimal Subtotal, decimal Impuesto, decimal Total) CalcularTotales(List<FacturaDetalleCreateDTO> detalles, decimal descuento = 0)
+        {
+            throw new NotImplementedException("Método CalcularTotales no implementado.");
         }
     }
 }
