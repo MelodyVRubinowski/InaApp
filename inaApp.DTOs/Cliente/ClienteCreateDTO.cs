@@ -10,6 +10,11 @@ namespace inaApp.DTOs.Cliente
 {
     public class ClienteCreateDTO
     {
+
+        [Key]
+        [Required(ErrorMessage = "El ID es obligatorio")]
+        public int Id { get; set; }
+
         [Required(ErrorMessage = "El tipo de identificación es obligatorio")]
         public TipoIdentificacion TipoIdentificacion { get; set; }
 

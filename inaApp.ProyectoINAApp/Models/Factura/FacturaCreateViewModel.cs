@@ -10,7 +10,7 @@ namespace inaApp.Web.ViewModels.Factura
     {
         [Required(ErrorMessage = "Debe seleccionar un cliente.")]
         [Display(Name = "Cédula del Cliente")]
-        public int Id { get; set; }
+        public int ClienteId { get; set; }
 
         [Required(ErrorMessage = "El número de factura es obligatorio.")]
         [Display(Name = "Número de Factura")]

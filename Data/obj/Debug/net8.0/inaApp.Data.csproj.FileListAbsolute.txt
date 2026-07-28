@@ -19,10 +19,10 @@ C:\Users\melod\OneDrive\Desktop\cursos INA\Progra 2026\inaApp\Data\obj\Debug\net
 C:\Users\melod\source\repos\InaApp\Data\bin\Debug\net8.0\inaApp.Data.deps.json
 C:\Users\melod\source\repos\InaApp\Data\bin\Debug\net8.0\inaApp.Data.dll
 C:\Users\melod\source\repos\InaApp\Data\bin\Debug\net8.0\inaApp.Data.pdb
-C:\Users\melod\source\repos\InaApp\Data\bin\Debug\net8.0\inaApp.Common.dll
+C:\Users\melod\source\repos\InaApp\Data\bin\Debug\net8.0\InaApp.Common.dll
 C:\Users\melod\source\repos\InaApp\Data\bin\Debug\net8.0\inaApp.Entities.dll
 C:\Users\melod\source\repos\InaApp\Data\bin\Debug\net8.0\inaApp.Entities.pdb
-C:\Users\melod\source\repos\InaApp\Data\bin\Debug\net8.0\inaApp.Common.pdb
+C:\Users\melod\source\repos\InaApp\Data\bin\Debug\net8.0\InaApp.Common.pdb
 C:\Users\melod\source\repos\InaApp\Data\obj\Debug\net8.0\inaApp.Data.csproj.AssemblyReference.cache
 C:\Users\melod\source\repos\InaApp\Data\obj\Debug\net8.0\inaApp.Data.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\melod\source\repos\InaApp\Data\obj\Debug\net8.0\inaApp.Data.AssemblyInfoInputs.cache

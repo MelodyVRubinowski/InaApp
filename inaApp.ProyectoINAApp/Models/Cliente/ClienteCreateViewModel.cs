@@ -2,14 +2,14 @@
 using static inaApp.Common.Enums.Enumeradores;
 
 
-namespace InaApp.ProyectoInaApp.Models.Cliente
+namespace InaApp.ProyectoINAApp.Models.Cliente
 {
     public class ClienteCreateViewModel
     {
-        [Required(ErrorMessage = "Campo obligatorio.")]
-        [Range(1, int.MaxValue, ErrorMessage = "El Id debe ser un numero positivo.")]
-        public int Id { get; set; }
 
+        [Key]
+        [Required(ErrorMessage = "El ID es obligatorio")]
+        public int Id { get; set; }
         [Required(ErrorMessage = "Campo obligatorio.")]
         [StringLength(20, ErrorMessage = "La cedula NO debe exeder los 20 caracteres.")]
         public string NumeroIdentificacion { get; set; } = string.Empty;
@@ -25,7 +25,6 @@ namespace InaApp.ProyectoInaApp.Models.Cliente
         [StringLength(50, MinimumLength = 3, ErrorMessage = "El apellido 1 debe tener entre 3 y 50 caracteres.")]
         public string PrimerApellido { get; set; } = string.Empty;
 
-        //el ? es para q permita null
         [StringLength(50, MinimumLength = 3, ErrorMessage = "El apellido 2 debe tener entre 3 y 50 caracteres.")]
         public string? SegundoApellido { get; set; } = string.Empty;
 

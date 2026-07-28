@@ -26,7 +26,7 @@
                     <th>Impuesto</th>
                     <th>Descuento</th>
                     <th>Total</th>
-                    <th>Estado</th>
+                   
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -42,14 +42,24 @@
                         <td>@item.Impuesto.ToString("N2")</td>
                         <td>@item.Descuento.ToString("N2")</td>
                         <td class="fw-bold">@item.Total.ToString("N2")</td>
-                        <td>
-                            <span class="badge @(item.Estado == "Pagada" ? "bg-success" : "bg-warning")">
-                                @item.Estado
-                            </span>
-                        </td>
-                        <td>
-                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Ver</a>
-                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
+                     
+                        <td class="text-center">
+                            <a asp-action="Details"
+                               asp-route-id="@item.Id"
+                               class="btn btn-info btn-sm">
+                                Detalles
+                            </a>
+
+                            <a asp-action="Edit"
+                               asp-route-id="@item.Id"
+                               class="btn btn-warning btn-sm">
+                                Modificar
+                            </a>
+                            <a asp-action="Delete"
+                               asp-route-id="@item.Id"
+                               class="btn btn-danger btn-sm">
+                                Anular
+                            </a>
                         </td>
                     </tr>
                 }

@@ -1,25 +1,17 @@
- using inaApp.ProyectoINAApp.Extensions;
-using inaApp.ProyectoINAApp.Mapping;
-using inaApp.Services;
-using System.Xml.Linq;
-
-using inaApp.Services.Interfaces;
-
+using inaApp.ProyectoINAApp.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddAplicationServices(builder.Configuration);
-builder.Services.AddScoped<FacturaService, FacturaService>();
-builder.Services.AddScoped<ClienteService, ClienteService>();
-builder.Services.AddScoped<IFacturaService, FacturaService>();
-
+//registro contenedor de inyeccion de dependencias
+builder.Services.AddApplicationServices(builder.Configuration);
 
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");

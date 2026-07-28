@@ -1,6 +1,6 @@
 ﻿using static inaApp.Common.Enums.Enumeradores;
 
-namespace InaApp.ProyectoInaApp.Models.Cliente
+namespace InaApp.ProyectoINAApp.Models.Cliente
 {
     public class ClienteIndexViewModel
     {

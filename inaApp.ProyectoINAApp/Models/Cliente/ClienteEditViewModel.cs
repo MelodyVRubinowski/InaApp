@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static inaApp.Common.Enums.Enumeradores;
 
-namespace InaApp.ProyectoInaApp.Models.Cliente
+namespace InaApp.ProyectoINAApp.Models.Cliente
 {
     public class ClienteEditViewModel
     {
-        [Required(ErrorMessage = "Campo obligatorio.")]
-        [Range(1, int.MaxValue, ErrorMessage = "El Id debe ser un numero positivo.")]
+
+        [Key]
+        [Required(ErrorMessage = "El ID es obligatorio")]
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Campo obligatorio.")]

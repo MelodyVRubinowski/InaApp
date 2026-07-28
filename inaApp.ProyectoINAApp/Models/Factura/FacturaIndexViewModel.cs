@@ -1,6 +1,7 @@
 ﻿using System;
+using inaApp.DTOs.Factura;
 using inaApp.ProyectoINAApp.Models.Factura;
-using inaApp.Services.Interfaces;
+using inaApp.Services;
 
 namespace inaApp.DTOs.ViewModels
 {

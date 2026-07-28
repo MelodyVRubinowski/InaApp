@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using inaApp.DTOs;
 using inaApp.DTOs.Categoria;
+using inaApp.DTOs.Factura;
 using inaApp.DTOs.Producto;
 using inaApp.Entities;
 using inaApp.ProyectoINAApp.Models.Categoria;
 using inaApp.ProyectoINAApp.Models.Factura;
 using inaApp.ProyectoINAApp.Models.Producto;
-using inaApp.Services.Interfaces;
 using inaApp.Web.ViewModels.Factura;
 
 namespace inaApp.ProyectoINAApp.Mapping
@@ -29,7 +29,6 @@ namespace inaApp.ProyectoINAApp.Mapping
             CreateMap<CategoriaCreateViewModel, CategoriaCreateDTO>();
             CreateMap<CategoriaEditViewModel, CategoriaUpdateDTO>();
 
-            // --- MAPEOS DE FACTURACIÓN (REQUERIDOS PARA LA ACTIVIDAD) [2] ---
 
             // 1. Flujo de Creación (De la Vista -> DTO -> Entidad)
             CreateMap<FacturaCreateViewModel, FacturaCreateDTO>();
@@ -38,7 +37,7 @@ namespace inaApp.ProyectoINAApp.Mapping
 
             // 2. Flujo de Consulta y Listados (De la Entidad -> DTO -> Vista)
             CreateMap<Factura, FacturaResponseDTO>();
-            CreateMap<Factura, FacturaListDTO>(); 
+            CreateMap<Factura, FacturaListDTO>();
             CreateMap<FacturaDetalle, FacturaDetalleResponseDTO>();
             CreateMap<FacturaResponseDTO, FacturaDetailsViewModel>();
         }

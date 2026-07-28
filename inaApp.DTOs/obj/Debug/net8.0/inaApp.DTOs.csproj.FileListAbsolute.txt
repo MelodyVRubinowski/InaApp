@@ -19,9 +19,9 @@ C:\Users\melod\OneDrive\Desktop\cursos INA\Progra 2026\inaApp\inaApp.DTOs\obj\De
 C:\Users\melod\source\repos\InaApp\inaApp.DTOs\bin\Debug\net8.0\inaApp.DTOs.deps.json
 C:\Users\melod\source\repos\InaApp\inaApp.DTOs\bin\Debug\net8.0\inaApp.DTOs.dll
 C:\Users\melod\source\repos\InaApp\inaApp.DTOs\bin\Debug\net8.0\inaApp.DTOs.pdb
-C:\Users\melod\source\repos\InaApp\inaApp.DTOs\bin\Debug\net8.0\inaApp.Common.dll
+C:\Users\melod\source\repos\InaApp\inaApp.DTOs\bin\Debug\net8.0\InaApp.Common.dll
 C:\Users\melod\source\repos\InaApp\inaApp.DTOs\bin\Debug\net8.0\inaApp.Entities.dll
-C:\Users\melod\source\repos\InaApp\inaApp.DTOs\bin\Debug\net8.0\inaApp.Common.pdb
+C:\Users\melod\source\repos\InaApp\inaApp.DTOs\bin\Debug\net8.0\InaApp.Common.pdb
 C:\Users\melod\source\repos\InaApp\inaApp.DTOs\bin\Debug\net8.0\inaApp.Entities.pdb
 C:\Users\melod\source\repos\InaApp\inaApp.DTOs\obj\Debug\net8.0\inaApp.DTOs.csproj.AssemblyReference.cache
 C:\Users\melod\source\repos\InaApp\inaApp.DTOs\obj\Debug\net8.0\inaApp.DTOs.GeneratedMSBuildEditorConfig.editorconfig

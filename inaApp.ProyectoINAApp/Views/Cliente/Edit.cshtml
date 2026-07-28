@@ -1,4 +1,4 @@
-﻿@using InaApp.ProyectoInaApp.Models.Cliente
+﻿@using InaApp.ProyectoINAApp.Models.Cliente
 
 
 @model ClienteEditViewModel
@@ -22,7 +22,9 @@
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                         <h5 class="text-secondary mb-3">Información de Identificación</h5>
-                        <div class="row mb-3">
+                       
+
+ <div class="row mb-3">
                             <div class="col-md-4">
                                 <label asp-for="TipoIdentificacion" class="form-label"></label>
                                 <select asp-for="TipoIdentificacion"
@@ -30,8 +32,11 @@
                                         class="form-select">
                                     <option value="">-- Seleccione --</option>
                                 </select>
+
                                 <span asp-validation-for="TipoIdentificacion" class="text-danger"></span>
                             </div>
+
+
                             <div class="col-md-8">
                                 <label asp-for="NumeroIdentificacion" class="form-label"></label>
                                 <input asp-for="NumeroIdentificacion" class="form-control" placeholder="Ej: 123456789" />

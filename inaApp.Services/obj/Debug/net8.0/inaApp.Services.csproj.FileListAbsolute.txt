@@ -23,12 +23,12 @@ C:\Users\melod\OneDrive\Desktop\cursos INA\Progra 2026\inaApp\inaApp.Services\ob
 C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.Services.deps.json
 C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.Services.dll
 C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.Services.pdb
-C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.Common.dll
+C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\InaApp.Common.dll
 C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.Data.dll
 C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.DTOs.dll
 C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.Entities.dll
 C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.Repository.dll
-C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.Common.pdb
+C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\InaApp.Common.pdb
 C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.DTOs.pdb
 C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.Entities.pdb
 C:\Users\melod\source\repos\InaApp\inaApp.Services\bin\Debug\net8.0\inaApp.Repository.pdb

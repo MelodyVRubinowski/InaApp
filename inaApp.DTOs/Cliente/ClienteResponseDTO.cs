@@ -10,6 +10,7 @@ namespace inaApp.DTOs.Cliente
 {
     public class ClienteResponseDTO
     {
+        [Key]
         [Required(ErrorMessage = "El ID es obligatorio")]
         public int Id { get; set; }
 
@@ -33,7 +34,7 @@ namespace inaApp.DTOs.Cliente
 
         [EmailAddress(ErrorMessage = "El correo electrónico no es válido")]
         [MaxLength(150, ErrorMessage = "El correo electrónico no debe exceder los 150 caracteres")]
-        public string? CorreoElectronico { get; set; }
+        public string? Correo { get; set; }
 
         [Phone(ErrorMessage = "El teléfono no es válido")]
         [MaxLength(20, ErrorMessage = "El teléfono no debe exceder los 20 caracteres")]

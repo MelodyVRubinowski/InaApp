@@ -4,116 +4,269 @@
 <h2>Registrar Nueva Venta</h2>
 
 <form asp-action="Create" id="formFactura">
-    <!-- SECCIÓN MAESTRO: Información General -->
-    <div class="card mb-3">
-        <div class="card-header bg-dark text-white">Datos de la Factura</div>
-        <div class="card-body row">
-            <div class="col-md-4">
-                <label>Número de Factura</label>
-                <input asp-for="NumeroFactura" class="form-control" placeholder="Ej: F001-0001" />
+    @Html.AntiForgeryToken()
+
+    <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+</div>
+<div class="card-body">
+    <div class="row">
+        <!-- Número de Factura -->
+        <div class="col-md-6 mb-3">
+            <label asp-for="NumeroFactura" class="form-label">Número de Factura *</label>
+            <!-- Usamos asp-for para vincular al modelo y validar -->
+            <input asp-for="NumeroFactura" type="text" class="form-control" placeholder="Ingrese Numero de Factura" />
+            <span asp-validation-for="NumeroFactura" class="text-danger"></span>
+        </div>
+
+    <!-- Fecha -->
+    <div class="mb-3">
+        <label asp-for="Fecha" class="form-label"></label>
+        <input asp-for="Fecha" type="date" class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="Fecha" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ClienteId" class="form-label">Cliente</label>
+
+        <select id="clienteSeleccionado" name="ClienteId" class="form-select">
+            <option value="">Seleccione un Cliente</option>
+
+            @foreach (var cliente in Model.ListaClientes)
+            {
+                <option value="@cliente.Id"
+                        data-nombre="@cliente.Nombre">
+                    @cliente.Nombre
+                </option>
+            }
+        </select>
+
+        <span asp-validation-for="ClienteId" class="text-danger"></span>
+    </div>
+
+
+    <!-- Descuento -->
+    <div class="mb-3">
+        <label asp-for="Descuento" class="form-label">Descuento (%)</label>
+        <input asp-for="Descuento" type="number" min="0" max="100" step="0.01" class="form-control" value="0" />
+        <span asp-validation-for="Descuento" class="text-danger"></span>
+    </div>
+
+    <!-- Sección de Agregar Productos -->
+    <div class="card mt-4">
+        <div class="card-header bg-primary text-white">
+            Agregar productos
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Producto</label>
+                    <select id="productoSeleccionado" class="form-select">
+                        <option value="">Seleccione un producto</option>
+                        @foreach (var prod in Model.ListaProductos)
+                        {
+                            <option value="@prod.Id"
+                                    data-nombre="@prod.Nombre"
+                                    data-precio="@prod.Precio.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)">
+                                @prod.Nombre - $@prod.Precio.ToString("N2")
+                            </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Cantidad</label>
+                    <input id="cantidadSeleccionada" type="number" min="1" value="1" class="form-control" />
+                </div>
+
+                <div class="col-md-3 mb-3 d-flex align-items-end">
+                    <button type="button" id="btnAgregarProducto" class="btn btn-primary w-100">
+                        Agregar
+                    </button>
+                </div>
             </div>
-            <div class="col-md-4">
-                <label>Fecha</label>
-                <input asp-for="Fecha" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
-            </div>
-            <div class="col-md-4">
-  
+            <div id="mensajeDetalle" class="text-danger mb-3"></div>
+        </div>
+    </div>
+
+    <!-- Tabla de Detalles -->
+    <div class="table-responsive mt-3">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio unitario</th>
+                    <th>Subtotal</th>
+                    <th class="text-center">Acción</th>
+                </tr>
+            </thead>
+            <tbody id="tablaDetalles">
+
+                @if (Model.DetallesTemporales != null && Model.DetallesTemporales.Any())
+                {
+                    @for (var i = 0; i < Model.DetallesTemporales.Count; i++)
+                    {
+                        var detalle = Model.DetallesTemporales[i];
+                        var producto = Model.ListaProductos?.FirstOrDefault(p => p.Id == detalle.ProductoId);
+                        var nombre = producto?.Nombre ?? "Producto no encontrado";
+                        var precio = producto?.Precio ?? 0;
+                        var subtotal = detalle.Cantidad * precio;
+
+                        <tr data-index="@i">
+                            <td>@nombre</td>
+                            <td>@detalle.Cantidad</td>
+                            <td class="precio-unit">@precio.ToString("N2")</td>
+                            <td class="subtotal-detalles">@subtotal.ToString("N2")</td>
+                            <td class="text-center">
+                                <!-- Inputs ocultos CRÍTICOS para el Model Binder -->
+                                <input type="hidden" name="DetallesTemporales[@i].ProductoId" value="@detalle.ProductoId" />
+                                <input type="hidden" name="DetallesTemporales[@i].Cantidad" value="@detalle.Cantidad" />
+                                <button type="button" class="btn btn-danger btn-sm btnEliminarDetalle">Eliminar</button>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted">No hay productos agregados.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Resumen -->
+    <div class="card mt-4">
+        <div class="card-header bg-dark text-white">
+            Resumen de la factura
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <strong>Subtotal:</strong> <span id="subtotalFactura">0.00</span>
+                </div>
+                <div class="col-md-4">
+                    <strong>Descuento:</strong> <span id="montoDescuento">0.00</span>
+                </div>
+                <div class="col-md-4">
+                    <strong>Total:</strong> <span id="totalFactura">0.00</span>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- SECCIÓN DETALLE: Selección de Productos -->
-    <div class="card mb-3">
-        <div class="card-header bg-secondary text-white">Agregar Productos</div>
-        <div class="card-body row">
-            <div class="col-md-5">
-                <label>Producto</label>
-                <select id="selProducto" asp-items="Model.Productos" class="form-control"></select>
-            </div>
-            <div class="col-md-3">
-                <label>Cantidad</label>
-                <input type="number" id="txtCantidad" class="form-control" min="1" value="1" />
-            </div>
-            <div class="col-md-4">
-                <button type="button" onclick="agregarProducto()" class="btn btn-success mt-4">Agregar al Detalle</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- TABLA TEMPORAL: Productos agregados antes de guardar -->
-    <table class="table table-bordered" id="tablaDetalles">
-        <thead class="thead-light">
-            <tr>
-                <th>Producto</th>
-                <th>Cantidad</th>
-                <th>Precio</th>
-                <th>Subtotal</th>
-                <th>Impuesto</th>
-                <th>Total</th>
-                <th>Acción</th>
-            </tr>
-        </thead>
-        <tbody id="detallesBody">
-            <!-- Filas dinámicas aquí -->
-        </tbody>
-    </table>
-
-    <!-- RESUMEN: Totales calculados -->
-    <div class="row justify-content-end">
-        <div class="col-md-3 text-right">
-            <p>Subtotal: <span id="lblSubtotal">$0.00</span></p>
-            <p>Impuesto: <span id="lblImpuesto">$0.00</span></p>
-            <p>Descuento: <input asp-for="Descuento" id="txtDescuento" class="form-control d-inline w-50" value="0" onchange="recalcularTotales()" /></p>
-            <h4>Total Final: <span id="lblTotal">$0.00</span></h4>
-        </div>
-    </div>
-
-    <div class="mt-3">
-        <button type="submit" class="btn btn-primary btn-lg">Confirmar y Guardar Factura</button>
-        <a asp-action="Index" class="btn btn-secondary btn-lg">Cancelar</a>
-    </div>
+    <button type="submit" class="btn btn-success">
+        Guardar
+    </button>
+    <a asp-action="Index" class="btn btn-secondary">
+        Cancelar
+    </a>
 </form>
 
 @section Scripts {
     <script>
-        // Lógica simple para manejar la tabla temporal en el cliente
-        let detalles = [];
+        document.addEventListener('DOMContentLoaded', function () {
+            const tablaDetalles = document.getElementById('tablaDetalles');
+            const btnAgregar = document.getElementById('btnAgregarProducto');
+            const selectProducto = document.getElementById('productoSeleccionado');
+            const inputCantidad = document.getElementById('cantidadSeleccionada');
+            const mensaje = document.getElementById('mensajeDetalle');
 
-        function agregarProducto() {
-            const select = document.getElementById("selProducto");
-            const productoId = select.value;
-            const productoNombre = select.options[select.selectedIndex].text;
-            const cantidad = parseInt(document.getElementById("txtCantidad").value);
+            // Variable para rastrear el índice actual en el array (para el Model Binder)
+            let indiceActual = @Model.DetallesTemporales?.Count ?? 0;
 
-            // Aquí deberías obtener el precio real vía AJAX o desde un atributo data en el select
-            const precio = 100.00; // Valor ejemplo para la demostración UI
+            function actualizarTotales() {
+                let subtotal = 0;
+                const filas = tablaDetalles.querySelectorAll('tr[data-index]');
 
-            if (productoId && cantidad > 0) {
-                detalles.push({ productoId, productoNombre, cantidad, precio });
-                renderizarTabla();
+                filas.forEach(fila => {
+                    const precio = parseFloat(fila.querySelector('.precio-unit').textContent.replace('$', '').replace(',', ''));
+                    const cant = parseInt(fila.querySelector('td:nth-child(2)').textContent);
+                    subtotal += (precio * cant);
+                });
+
+                const descuentoPorcentaje = parseFloat(document.querySelector('input[name="Descuento"]').value) || 0;
+                const descuentoMonto = subtotal * (descuentoPorcentaje / 100);
+                const total = subtotal - descuentoMonto;
+
+                document.getElementById('subtotalFactura').textContent = subtotal.toFixed(2);
+                document.getElementById('montoDescuento').textContent = descuentoMonto.toFixed(2);
+                document.getElementById('totalFactura').textContent = total.toFixed(2);
             }
-        }
 
-        function renderizarTabla() {
-            const body = document.getElementById("detallesBody");
-            body.innerHTML = "";
-            let subtotalGral = 0;
+            btnAgregar.addEventListener('click', function () {
+                const productoId = selectProducto.value;
+                const productoOpt = selectProducto.options[selectProducto.selectedIndex];
+                const cantidad = parseInt(inputCantidad.value);
 
-            detalles.forEach((item, index) => {
-                const subLinea = item.cantidad * item.precio;
-                subtotalGral += subLinea;
-                body.innerHTML += `
-                    <tr>
-                        <td>${item.productoNombre} <input type="hidden" name="Detalles[${index}].ProductoId" value="${item.productoId}" /></td>
-                        <td>${item.cantidad} <input type="hidden" name="Detalles[${index}].Cantidad" value="${item.cantidad}" /></td>
-                        <td>${item.precio}</td>
-                        <td>${subLinea}</td>
-                        <td>${subLinea * 0.15}</td> <!-- Ejemplo IVA 15% -->
-                        <td>${subLinea * 1.15}</td>
-                        <td><button type="button" class="btn btn-danger btn-sm" onclick="eliminar(${index})">Eliminar</button></td>
-                    </tr>`;
+                if (!productoId || cantidad < 1) {
+                    mensaje.textContent = "Seleccione un producto y una cantidad válida.";
+                    return;
+                }
+
+                mensaje.textContent = "";
+                const nombre = productoOpt.getAttribute('data-nombre');
+                const precio = parseFloat(productoOpt.getAttribute('data-precio'));
+                const subtotal = precio * cantidad;
+
+                // Crear la fila
+                const fila = document.createElement('tr');
+                fila.setAttribute('data-index', indiceActual);
+
+                fila.innerHTML = `
+                    <td>${nombre}</td>
+                    <td>${cantidad}</td>
+                    <td class="precio-unit">${precio.toFixed(2)}</td>
+                    <td class="subtotal-detalles">${subtotal.toFixed(2)}</td>
+                    <td class="text-center">
+                        <input type="hidden" name="DetallesTemporales[${indiceActual}].ProductoId" value="${productoId}" />
+                        <input type="hidden" name="DetallesTemporales[${indiceActual}].Cantidad" value="${cantidad}" />
+                        <button type="button" class="btn btn-danger btn-sm btnEliminarDetalle">Eliminar</button>
+                    </td>
+                `;
+
+                tablaDetalles.appendChild(fila);
+                indiceActual++;
+                actualizarTotales();
+
+                // Limpiar inputs
+                selectProducto.value = "";
+                inputCantidad.value = 1;
             });
-            // Nota: Los cálculos finales reales los hace el Service [6]
-        }
+
+            // Evento delegados para eliminar
+            tablaDetalles.addEventListener('click', function (e) {
+                if (e.target.classList.contains('btnEliminarDetalle')) {
+                    const fila = e.target.closest('tr');
+                    fila.remove();
+
+                    // REINDEXAR: Esto es VITAL para que el Model Binder funcione
+                    // Al eliminar una fila intermedia, los índices deben reordenarse
+                    const filas = tablaDetalles.querySelectorAll('tr[data-index]');
+                    filas.forEach((fila, index) => {
+                        fila.setAttribute('data-index', index);
+                        const inputId = fila.querySelector(`input[name^="DetallesTemporales["].name`);
+                        const inputCant = fila.querySelector(`input[name^="DetallesTemporales["].name`);
+
+                        // Actualizar los names de los inputs
+                        const inputProducto = fila.querySelector('input[name*=".ProductoId"]');
+                        const inputCantidad = fila.querySelector('input[name*=".Cantidad"]');
+
+                        if(inputProducto) inputProducto.name = `DetallesTemporales[${index}].ProductoId`;
+                        if(inputCantidad) inputCantidad.name = `DetallesTemporales[${index}].Cantidad`;
+                    });
+
+                    actualizarTotales();
+                }
+            });
+
+            // Escuchar cambios en el descuento
+            document.querySelector('input[name="Descuento"]').addEventListener('input', actualizarTotales);
+
+            // Inicializar totales si hay datos al cargar
+            actualizarTotales();
+        });
     </script>
 }

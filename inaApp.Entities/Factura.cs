@@ -7,8 +7,14 @@ namespace inaApp.Entities
 {
         [Table("tbFactura")]
         public class Factura
+
     {
+        [Key]
+        [Required]
         public int Id { get; set; }
+      
+        [Required(ErrorMessage = "El número de factura es obligatorio.")]
+        [StringLength(50, ErrorMessage = "El número de factura no puede exceder 50 caracteres.")]
         public string NumeroFactura { get; set; } = string.Empty;
         public DateTime Fecha { get; set; }
 
