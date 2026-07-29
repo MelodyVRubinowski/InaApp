@@ -8,9 +8,6 @@ namespace inaApp.DTOs.Categoria
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
-
-        public bool Estado { get; set; } 
-
-        public ICollection<ProductoResponseDTO> Productos { get; set; } = new List<ProductoResponseDTO>();
+        public bool Estado { get; set; }
     }
 }

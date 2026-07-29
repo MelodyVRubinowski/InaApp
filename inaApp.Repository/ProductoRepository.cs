@@ -86,7 +86,15 @@ private readonly ApplicationDbContext _context;
                 throw ex;
             }
         }
-
+        public async Task<List<Producto>> BuscarProductosAsync(string filtro)
+        {
+            // Requerimiento 4: Filtrar por código (Id) o nombre
+            return await _context.Producto
+                .Include(p => p.Categoria)
+                .Where(x => x.Estado == true &&
+                           (x.Nombre.Contains(filtro) || x.Id.ToString() == filtro))
+                .ToListAsync();
+        }
 
         public async Task<List<Producto>> obtenerTodosAsync()
         {

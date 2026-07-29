@@ -8,7 +8,7 @@
     ViewData["Title"] = "Productos";
 }
 
-<!--Tabla de bootstrap-->
+
 <div class="container mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -18,62 +18,67 @@
             <i class="bi bi-plus-circle-fill"></i> Nuevo Producto
         </a>
     </div>
-    
-    <table class="table table-bordered table-striped table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Categoria</th>
-                <th>Descripción</th>
-                <th>Precio</th>
-                <th>Stock</th>
-                <th class="text-center">Acciones</th>
-            </tr>
-        </thead>
-    
-        <tbody>
-            @if (Model != null && Model.Any())
+
+<table class="table table-bordered table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Categoria</th>
+            <!-- Nuevos encabezados requeridos -->
+            <th>Impuesto</th>
+            <th>% Imp.</th>
+            <th>% Desc. Máx.</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th class="text-center">Acciones</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var producto in Model)
             {
-                foreach (var producto in Model)
-                {
-                    <tr>
-                        <td>@producto.Id</td>
-                        <td>@producto.Nombre</td>
-                        <td>@producto.CategoriaNombre</td>
-                        <td>@producto.Descripcion</td>
-                        <td>₡@producto.Precio.ToString("N2")</td>
-                        <td>@producto.Stock</td>
+                <tr>
+                    <td>@producto.Id</td>
+                    <td>@producto.Nombre</td>
+                    <td>@producto.CategoriaNombre</td>
+                    <!-- Nuevas celdas con la información requerida -->
+                    <td>@producto.ImpuestoAplicable</td>
+                    <td>@producto.PorcentajeImpuesto%</td>
+                    <td>@producto.DescuentoMaximoPermitido%</td>
+                    <td>₡@producto.Precio.ToString("N2")</td>
+                    <td>@producto.Stock</td>
                         <td class="text-center">
                             <a asp-action="Details"
                                asp-route-id="@producto.Id"
-                               class="btn btn-info btn-sm my-1">
+                               class="btn btn-info btn-sm">
                                 Detalles
                             </a>
 
-
                             <a asp-action="Edit"
                                asp-route-id="@producto.Id"
-                               class="btn btn-warning btn-sm my-1">
+                               class="btn btn-warning btn-sm">
                                 Modificar
                             </a>
                             <a asp-action="Delete"
                                asp-route-id="@producto.Id"
-                               class="btn btn-danger btn-sm my-1">
+                               class="btn btn-danger btn-sm">
                                 Eliminar
                             </a>
                         </td>
                     </tr>
-                }
             }
-            else
-            {
-                <tr>
-                    <td colspan="6" class="text-center">
-                        No existen productos registrados.
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+        }
+        else
+        {
+            <!-- Actualiza el colspan a 9 para que cubra las nuevas columnas -->
+            <tr>
+                <td colspan="9" class="text-center">
+                    No existen productos registrados.
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

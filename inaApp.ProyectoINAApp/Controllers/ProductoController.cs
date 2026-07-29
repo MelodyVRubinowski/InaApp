@@ -106,45 +106,76 @@ namespace inaApp.ProyectoINAApp.Controllers
         }
 
         // POST: ProductoController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken] 
-        public async Task<ActionResult> CreateAsync(ProductoCreateViewModel productoVM)
+[HttpPost]
+[ValidateAntiForgeryToken] 
+public async Task<ActionResult> CreateAsync(ProductoCreateViewModel productoVM)
+{
+    try
+    {
+        if (!ModelState.IsValid)
         {
-            try
+            // Recuperar categorías si el modelo no es válido
+            var categoriasResponse = await _categoriaService.ObtenerTodosAsync();
+            
+            if (categoriasResponse != null && categoriasResponse.Data != null)
             {
-                if (!ModelState.IsValid)
-                {
-                    var categorias = await _categoriaService.ObtenerTodosAsync();
-                    productoVM.Categorias = new SelectList(categorias.Data, "Id", "Nombre");
-
-                    return View(productoVM);
-                }
-
-                var productoCreateDTO = _mapper.Map<ProductoCreateDTO>(productoVM);
-
-                var response = await _productoService.CrearAsync(productoCreateDTO);
-
-
-                if (!response.Success)
-                {
-                    var categorias = await _categoriaService.ObtenerTodosAsync();
-                    productoVM.Categorias = new SelectList(categorias.Data, "Id", "Nombre");
-
-                    ModelState.AddModelError(string.Empty, response.Message);
-                    return View(productoVM);
-                }
-
-                TempData["SuccessMessage"] = "Producto creado exitosamente.";
-
-                
-                return RedirectToAction(nameof(Index));
+                productoVM.Categorias = new SelectList(categoriasResponse.Data, "Id", "Nombre");
             }
-            catch
+            else
             {
-                return View();
+                // Manejar el caso donde no hay categorías
+                productoVM.Categorias = new SelectList(new List<CategoriaResponseDTO>(), "Id", "Nombre");
+                TempData["ErrorMessage"] = "No se pudieron cargar las categorías.";
             }
+            
+            return View(productoVM);
         }
 
+        var productoCreateDTO = _mapper.Map<ProductoCreateDTO>(productoVM);
+        var response = await _productoService.CrearAsync(productoCreateDTO);
+
+        if (!response.Success)
+        {
+            // Recuperar categorías si la creación falla
+            var categoriasResponse = await _categoriaService.ObtenerTodosAsync();
+            
+            if (categoriasResponse != null && categoriasResponse.Data != null)
+            {
+                productoVM.Categorias = new SelectList(categoriasResponse.Data, "Id", "Nombre");
+            }
+            else
+            {
+                productoVM.Categorias = new SelectList(new List<CategoriaResponseDTO>(), "Id", "Nombre");
+                TempData["ErrorMessage"] = "No se pudieron cargar las categorías.";
+            }
+
+            ModelState.AddModelError(string.Empty, response.Message);
+            return View(productoVM);
+        }
+
+        TempData["SuccessMessage"] = "Producto creado exitosamente.";
+        return RedirectToAction(nameof(Index));
+    }
+    catch (Exception ex)
+    {
+        // Loguear el error real (importante para depurar)
+        // logger.LogError(ex, "Error al crear producto");
+        
+        // Recarga de categorías en caso de error
+        var categoriasResponse = await _categoriaService.ObtenerTodosAsync();
+        if (categoriasResponse != null && categoriasResponse.Data != null)
+        {
+            productoVM.Categorias = new SelectList(categoriasResponse.Data, "Id", "Nombre");
+        }
+        else
+        {
+            productoVM.Categorias = new SelectList(new List<CategoriaResponseDTO>(), "Id", "Nombre");
+        }
+        
+        ModelState.AddModelError(string.Empty, "Ocurrió un error al intentar crear el producto.");
+        return View(productoVM); // <--- Importante: pasar el modelo, no solo View()
+    }
+}
         
 
         // GET: ProductoController/Edit/5

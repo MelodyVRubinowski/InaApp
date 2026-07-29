@@ -9,7 +9,7 @@ namespace inaApp.ProyectoINAApp.Models.Producto
         [Range(1, int.MaxValue, ErrorMessage = "La categoria Id debe ser un numero positivo.")]
         public int CategoriaId { get; set; }
 
-        public SelectList? Categorias { get; set; } 
+        public SelectList? Categorias { get; set; }
 
         [Display(Name = "Nombre del producto")]
         [Required(ErrorMessage = "El nombre es un campo obligatorio.")]
@@ -30,6 +30,15 @@ namespace inaApp.ProyectoINAApp.Models.Producto
         [Display(Name = "Descripcion del producto")]
         [StringLength(500, ErrorMessage = "La descripcion NO debe superar los 500 caracterres.")]
         public string? Descripcion { get; set; } = string.Empty;
+        [Display(Name = "Impuesto")]
+        public string ImpuestoAplicable { get; set; } = string.Empty;
+
+        [Display(Name = "% Imp.")]
+        public decimal PorcentajeImpuesto { get; set; }
+
+        [Display(Name = "% Desc. Máx.")]
+        public decimal DescuentoMaximoPermitido { get; set; }
+
 
     }
 }

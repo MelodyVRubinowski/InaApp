@@ -36,5 +36,14 @@ namespace inaApp.ProyectoINAApp.Models.Producto
         [Display(Name = "Descripcion del producto")]
         [StringLength(500, ErrorMessage = "La descripcion NO debe superar los 500 caracterres.")]
         public string? Descripcion { get; set; } = string.Empty;
+        [Display(Name = "Impuesto")]
+        public string ImpuestoAplicable { get; set; } = string.Empty;
+
+        [Display(Name = "% Imp.")]
+        public decimal PorcentajeImpuesto { get; set; }
+
+        [Display(Name = "% Desc. Máx.")]
+        public decimal DescuentoMaximoPermitido { get; set; }
+
     }
 }
